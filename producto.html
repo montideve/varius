@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Producto - Varius</title>
+    <link rel="stylesheet" href="assets/css/carrito.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="brand"><a href="index.html" style="color:inherit;text-decoration:none">Varius</a></div>
+        <nav class="top-actions">
+            <button id="openCartBtn2" class="cart-btn" aria-label="Abrir carrito">🛒 <span
+                    id="cartCount2">0</span></button>
+        </nav>
+    </header>
+
+    <main class="container product-page">
+        <div id="productArea" class="product-area">
+            <div class="spinner" id="productSpinner">Cargando producto…</div>
+        </div>
+    </main>
+
+    <!-- Reúso de los modales de carrito/checkout/confirmación (idénticos a index.html) -->
+    <div id="cartModal" class="modal hidden" aria-hidden="true" role="dialog">
+        <div class="modal-panel" role="document">
+            <header class="modal-header">
+                <button id="closeCart" class="back">←</button>
+                <h3>Tu carrito</h3>
+            </header>
+            <div class="modal-body" id="cartBody">
+                <div id="cartItems"></div>
+                <div id="cartSummary" class="cart-summary">
+                    <div>Subtotal: <strong id="cartSubtotal">$0</strong></div>
+                    <div>Envío: <strong id="cartShipping">Gratis</strong></div>
+                    <div class="total">Total: <strong id="cartTotal">$0</strong></div>
+                </div>
+                <div class="cart-actions">
+                    <button id="continueWithData" class="btn-primary">Continuar con mis datos</button>
+                    <button id="clearCartBtn" class="btn-secondary">Vaciar carrito</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="checkoutModal" class="modal hidden" aria-hidden="true" role="dialog">
+        <div class="modal-panel" role="document">
+            <header class="modal-header">
+                <button id="backToCart" class="back">←</button>
+                <h3>Completa tus datos</h3>
+            </header>
+            <form id="checkoutForm" class="modal-body" novalidate>
+                <label>Nombre y apellido <span class="req">*</span>
+                    <input id="cust_name" name="name" type="text" placeholder="Ej: Ana Martínez" required>
+                </label>
+                <label>Correo electrónico <span class="req">*</span>
+                    <input id="cust_email" name="email" type="email" placeholder="ejemplo@correo.com" required>
+                </label>
+                <label>Teléfono <span class="req">*</span>
+                    <input id="cust_phone" name="phone" type="tel" placeholder="+52 55 1234 5678" required>
+                </label>
+                <label>Dirección completa <span class="req">*</span>
+                    <textarea id="cust_address" name="address" placeholder="Calle, número, colonia, ciudad"
+                        required></textarea>
+                </label>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Confirmar pedido</button>
+                    <button type="button" id="cancelCheckout" class="btn-secondary">Cancelar</button>
+                </div>
+                <div id="checkoutMsg" class="form-msg" aria-live="polite"></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="orderConfirmModal" class="modal hidden" aria-hidden="true" role="dialog">
+        <div class="modal-panel confirm" role="document">
+            <h3>Pedido enviado</h3>
+            <p id="orderConfirmText">Su pedido será atendido pronto. Gracias por comprar con nosotros.</p>
+            <button id="closeConfirm" class="btn-primary">Cerrar</button>
+        </div>
+    </div>
+
+    <div id="toast" class="toast" aria-live="polite"></div>
+
+    <script type="module" src="assets/js/pedidos-data.js"></script>
+</body>
+
+</html>

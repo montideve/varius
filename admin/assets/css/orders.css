@@ -1,0 +1,167 @@
+/* orders.css
+   Estilos específicos para la página de pedidos. Complementa tu style.css.
+   Mantengo la coherencia con los estilos existentes (badges, modal, toast).
+*/
+
+/* Reglas específicas */
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  align-items: end;
+}
+
+@media (max-width: 1100px) {
+  .filters-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .filters-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+.table-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  padding: 12px;
+  border-radius: 8px;
+  overflow: auto;
+}
+
+table#ordersTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1100px;
+}
+
+#ordersTable thead th {
+  text-align: left;
+  font-weight: 600;
+  padding: 12px 14px;
+  color: var(--muted);
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+}
+
+#ordersTable tbody td {
+  padding: 12px 14px;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f3f5;
+  color: #111827;
+  font-size: 13px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: var(--badge-bg);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.badge.paid {
+  background: #ecfdf5;
+  color: #16a34a;
+  border: 1px solid rgba(16, 185, 129, 0.06);
+}
+
+.badge.pending {
+  background: #fff7ed;
+  color: #92400e;
+  border: 1px solid rgba(245, 158, 11, 0.06);
+}
+
+.badge.in_transit {
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1px solid rgba(59, 130, 246, 0.06);
+}
+
+.badge.delivered {
+  background: #f1f5f9;
+  color: #0f172a;
+  border: 1px solid rgba(15, 23, 42, 0.03);
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Modal overrides */
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.35);
+  z-index: 60;
+}
+.hidden {
+  display: none;
+}
+.modal-content {
+  width: 820px;
+  max-width: 96%;
+  background: white;
+  border-radius: 10px;
+  padding: 0 18px 18px;
+  border: 1px solid var(--border);
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.modal-header h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* Form inside modal */
+.modal-body label {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 4px;
+  display: block;
+}
+.modal-body select,
+.modal-body input[type="text"],
+.modal-body input[type="date"],
+.modal-body textarea {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  width: 100%;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  background: #111827;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 8px;
+  z-index: 80;
+  box-shadow: 0 6px 20px rgba(12, 15, 20, 0.15);
+}
+
+/* small helpers */
+.input-alert {
+  font-size: 12px;
+  color: #ef4444;
+  margin-top: 4px;
+}

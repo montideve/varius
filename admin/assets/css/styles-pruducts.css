@@ -1,0 +1,350 @@
+/* Estilos para replicar visualmente la tabla de la imagen */
+/* Tipografías y variables */
+:root {
+    --bg: #f6f7f8;
+    --card-bg: #fff;
+    --muted: #6b7280;
+    --border: #e6e8eb;
+    --accent: #111827;
+    --btn-bg: #1f2937;
+    /* botón oscuro */
+    --primary: #0b74de;
+    --success: #16a34a;
+    --danger: #ef4444;
+    --radius: 8px;
+    --table-row-bg: #fff;
+    --badge-bg: #f3f4f6;
+}
+
+/* Reset */
+* {
+    box-sizing: border-box
+}
+
+body {
+    margin: 0;
+    font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: #111827;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Header */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border);
+    border-radius: 8px 8px 0 0;
+    margin: 20px;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
+}
+
+.page-header h1 {
+    font-weight: 600;
+    font-size: 18px;
+    margin: 0;
+    color: #0f172a;
+}
+
+.btn-add {
+    background: var(--btn-bg);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.btn-add .plus {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Container */
+.container {
+    margin: 0 20px 40px 20px;
+}
+
+/* Filters card */
+.filters-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 18px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.search-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.search {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border);
+    padding: 10px;
+    border-radius: 8px;
+    background: #fbfbfb;
+}
+
+.search input {
+    border: 0;
+    outline: none;
+    width: 100%;
+    font-size: 14px;
+    color: #111827;
+}
+
+.filter-select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: white;
+}
+
+/* Table card */
+.table-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 12px;
+    border-radius: 8px;
+    overflow: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 980px;
+    /* para mantener apariencia similar */
+}
+
+thead th {
+    text-align: left;
+    font-weight: 600;
+    padding: 14px 18px;
+    color: var(--muted);
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+}
+
+tbody td {
+    padding: 18px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f3f5;
+    color: #111827;
+    font-size: 14px;
+}
+
+/* Imagen pequeña */
+.thumb {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: #e6e9ed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9aa0a6;
+    font-weight: 700;
+}
+
+/* Nombre y descripcion */
+.product-name {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Badges */
+.badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 12px;
+    background: var(--badge-bg);
+    color: var(--muted);
+    font-size: 12px;
+}
+
+/* Estado small badge */
+.badge-state {
+    background: #f3f4f6;
+    color: #374151;
+    padding: 6px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+/* Acciones icon buttons */
+.actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(15, 23, 42, 0.35);
+    z-index: 60;
+}
+
+.hidden {
+    display: none;
+}
+
+.modal-content {
+    width: 720px;
+    max-width: 95%;
+    background: white;
+    border-radius: 10px;
+    padding: 0 20px 18px;
+    border: 1px solid var(--border);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border)
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 16px
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #6b7280
+}
+
+/* Form */
+.modal-form {
+    padding: 12px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px
+}
+
+.form-row {
+    display: flex;
+    flex-direction: column
+}
+
+.form-row.inline {
+    display: flex;
+    gap: 12px
+}
+
+.form-row.inline>div {
+    flex: 1
+}
+
+.form-row label {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 6px
+}
+
+.form-row input[type="text"],
+.form-row input[type="number"],
+.form-row textarea,
+.form-row select,
+.form-row input[type="file"] {
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding-top: 6px
+}
+
+.btn-primary {
+    background: var(--btn-bg);
+    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer
+}
+
+/* Toast */
+.toast {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background: #111827;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 8px;
+    z-index: 80;
+    box-shadow: 0 6px 20px rgba(12, 15, 20, 0.15);
+}
+
+/* Responsive */
+@media (max-width:900px) {
+    .search-row {
+        flex-direction: column;
+        align-items: stretch
+    }
+
+    thead th:nth-child(3),
+    tbody td:nth-child(3),
+    thead th:nth-child(4),
+    tbody td:nth-child(4),
+    thead th:nth-child(5),
+    tbody td:nth-child(5),
+    thead th:nth-child(6),
+    tbody td:nth-child(6) {
+        display: none;
+    }
+
+    table {
+        min-width: 0
+    }
+}

@@ -1,0 +1,62 @@
+.modal.hidden {
+    display: none;
+}
+
+/* Force assign modal tables stacked: vendedores arriba, motorizados abajo */
+#assignModal .modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* user cell: name + phone below */
+.user-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.user-name {
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.user-phone {
+    font-size: 13px;
+    color: var(--muted);
+}
+
+/* timeline */
+.timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.timeline-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #fff, #fbfbfb);
+    margin-bottom: 8px;
+    border: 1px solid var(--border);
+}
+
+.timeline-title {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.timeline-time {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* small responsive adjustments already handled elsewhere */
+
+.icon-btn[disabled] {
+    opacity: 0.45;
+    cursor: not-allowed;
+}

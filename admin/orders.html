@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Gestión de Pedidos — Varius</title>
+    <!-- Usa tus estilos globales y el nuevo específico para orders -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/orders.css">
+    <!-- Si usas un auth-guard similar al resto de páginas, inclúyelo -->
+    <script type="module" src="../assets/js/auth-guard.js"></script>
+</head>
+
+<body>
+    <input id="nav-toggle" type="checkbox" class="nav-toggle" aria-hidden="true">
+
+    <!-- Top bar -->
+    <header class="topbar">
+        <div class="top-left">
+            <label for="nav-toggle" class="hamburger" aria-hidden="true">
+                <span class="hamburger-box"><span class="hamburger-inner"></span></span>
+            </label>
+            <a class="brand" href="./" aria-label="Dashboard">
+                <span class="logo" aria-hidden="true">
+                    <!-- simple logo svg -->
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <rect x="3" y="3" width="6" height="18" rx="1.5" fill="#2b6ef6"></rect>
+                        <rect x="10.5" y="9" width="6" height="12" rx="1.5" fill="#60c3ff"></rect>
+                        <rect x="18" y="15" width="3" height="6" rx="1.5" fill="#9bdc8e"></rect>
+                    </svg>
+                </span>
+                <span class="brand-text">Varius</span>
+            </a>
+        </div>
+
+        <div class="top-search">
+            <label for="q" class="sr-only">Buscar</label>
+            <input id="q" type="search" placeholder="Search..." aria-label="Buscar" />
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Navegación principal">
+        <nav>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="./" class="nav-link">
+                        <span class="nav-icon" aria-hidden="true">🏠</span>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+
+                <!----
+                <li class="nav-item">
+                    <details class="nav-dropdown">
+                        <summary class="nav-link summary-link">
+                            <span class="nav-icon" aria-hidden="true">📊</span>
+                            <span class="nav-text">Analytics</span>
+                        </summary>
+                        <ul class="sub-list">
+                            <li><a href="#">Visión general</a></li>
+                            <li><a href="#">Tráfico</a></li>
+                            <li><a href="#">Conversiones</a></li>
+                        </ul>
+                    </details>
+                </li>
+                ---->
+
+                <!-- Customers -->
+                <li class="nav-item">
+                    <a href="usuarios.html" class="nav-link">
+                        <span class="nav-icon" aria-hidden="true">👥</span>
+                        <span class="nav-text">Usuarios</span>
+                    </a>
+                </li>
+
+                <!-- Reports -->
+                <li class="nav-item">
+                    <a href="./product.html" class="nav-link">
+                        <span class="nav-icon" aria-hidden="true">📦</span>
+                        <span class="nav-text">Productos</span>
+                    </a>
+                </li>
+
+                <!-- Notifications -->
+                <li class="nav-item active">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon" aria-hidden="true">📋</span>
+                        <span class="nav-text">Pedidos</span>
+                    </a>
+                </li>
+
+            </ul>
+
+            <!-- bottom user block -->
+            <div class="sidebar-user">
+                <div class="sidebar-user-info">
+                    <span class="avatar circle"></span>
+                    <div class="user-meta">
+                        <div class="name"></div>
+                        <div class="email"></div>
+                    </div>
+                </div>
+                <a href="#" class="logout-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-power" viewBox="0 0 16 16">
+                        <path d="M7.5 1v7h1V1z" />
+                        <path
+                            d="M3 8.812a5 5 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812" />
+                    </svg>
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <section class="table-wrap card">
+            <div class="table-header">
+                <h3>Gestión de Pedidos</h3>
+                <div style="display:flex;gap:8px;align-items:center;">
+                    <button id="refreshBtn" class="btn-apply">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                            <path
+                                d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41m-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9" />
+                            <path fill-rule="evenodd"
+                                d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5 5 0 0 0 8 3M3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9z" />
+                        </svg>
+                        Actualizar
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-scroll">
+                <div class="container">
+                    <!-- Filtros -->
+                    <section class="filters-card">
+                        <div class="filters-grid">
+                            <div class="filter-field">
+                                <label for="searchInput">Buscar (ID / nombre / correo)</label>
+                                <input id="searchInput" type="text" placeholder="Buscar..." />
+                            </div>
+
+                            <div class="filter-field">
+                                <label for="paymentFilter">Estado de pago</label>
+                                <select id="paymentFilter">
+                                    <option value="">Todos</option>
+                                    <option value="pending">Pendiente</option>
+                                    <option value="paid">Pagado</option>
+                                    <option value="refunded">Reembolsado</option>
+                                    <option value="partial">Parcial</option>
+                                </select>
+                            </div>
+
+                            <div class="filter-field">
+                                <label for="shippingFilter">Estado de envío</label>
+                                <select id="shippingFilter">
+                                    <option value="">Todos</option>
+                                    <option value="pending">Pendiente</option>
+                                    <option value="assigned">Asignado</option>
+                                    <option value="in_transit">En tránsito</option>
+                                    <option value="delivered">Entregado</option>
+                                    <option value="cancelled">Cancelado</option>
+                                </select>
+                            </div>
+
+                            <div class="filter-field">
+                                <label for="sellerFilter">Vendedor</label>
+                                <select id="sellerFilter">
+                                    <option value="">Todos</option>
+                                    <!-- poblado dinámicamente -->
+                                </select>
+                            </div>
+
+                            <div class="filter-field">
+                                <label for="motorFilter">Motorizado</label>
+                                <select id="motorFilter">
+                                    <option value="">Todos</option>
+                                    <!-- poblado dinámicamente -->
+                                </select>
+                            </div>
+
+                            <div class="filter-field">
+                                <label>Fecha (desde - hasta)</label>
+                                <div style="display:flex;gap:8px;">
+                                    <input id="dateFrom" type="date" />
+                                    <input id="dateTo" type="date" />
+                                </div>
+                            </div>
+
+                            <div class="filter-field" style="align-self:center">
+                                <label for="perPageSelect">Mostrar</label>
+                                <select id="perPageSelect">
+                                    <option value="10">10</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="all">Todos</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="margin-top:12px;display:flex;gap:8px;">
+                            <button id="applyFilters" class="btn-apply">Aplicar filtros</button>
+                            <button id="clearFilters" class="btn-secondary">Limpiar</button>
+                        </div>
+                    </section>
+
+                    <!-- Tabla -->
+                    <section class="table-card" style="margin-top:12px;">
+                        <div class="table-controls"
+                            style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                            <div>
+                                Página: <span id="pageInfo">1</span>
+                            </div>
+                            <div class="pagination-controls" style="display:flex;gap:8px;align-items:center;">
+                                <button id="prevPage" class="icon-btn">◀</button>
+                                <button id="nextPage" class="icon-btn">▶</button>
+                            </div>
+                        </div>
+
+                        <table id="ordersTable" role="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Cliente</th>
+                                    <th>Items</th>
+                                    <th>Total</th>
+                                    <th>Pago</th>
+                                    <th>Envío</th>
+                                    <th>Vendedor</th>
+                                    <th>Motorizado</th>
+                                    <th>Fecha</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersBody">
+                                <!-- render JS -->
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal: Detalle / asignaciones / confirmaciones -->
+        <div id="orderModal" class="modal hidden" aria-hidden="true" role="dialog" aria-modal="true">
+            <div class="modal-content">
+                <header class="modal-header">
+                    <h2 id="orderModalTitle">Pedido</h2>
+                    <button id="closeOrderModal" class="close-btn" aria-label="Cerrar">&times;</button>
+                </header>
+
+                <div class="modal-body" style="padding:12px;">
+                    <!-- Contenido dinámico -->
+                    <div id="orderDetails"></div>
+
+                    <!-- Asignaciones (visible a admin y vendedor) -->
+                    <div id="assignSection" style="margin-top:12px;display:none;">
+                        <label>Asignar vendedor</label>
+                        <select id="assignSellerSelect">
+                            <option value="">-- seleccionar --</option>
+                        </select>
+
+                        <label style="margin-top:8px;">Asignar motorizado</label>
+                        <select id="assignMotorSelect">
+                            <option value="">-- seleccionar --</option>
+                        </select>
+
+                        <div style="margin-top:8px;">
+                            <button id="saveAssignBtn" class="btn-apply">Guardar asignaciones</button>
+                        </div>
+                    </div>
+
+                    <!-- Confirmación de entrega (motorizado) -->
+                    <form id="confirmDeliveryForm" class="hidden" style="margin-top:12px;">
+                        <label>Método de pago</label>
+                        <select id="deliveryPaymentMethod">
+                            <option value="pago_movil">Pago móvil</option>
+                            <option value="divisa">Divisa</option>
+                            <option value="efectivo">Efectivo</option>
+                            <option value="otro">Otro</option>
+                        </select>
+
+                        <label style="margin-top:8px;">Observaciones</label>
+                        <textarea id="deliveryObs" rows="3" placeholder="Observaciones..."></textarea>
+
+                        <label style="margin-top:8px;">Comprobante (imagen / PDF, máx 5MB)</label>
+                        <input id="deliveryProof" type="file" accept="image/*,application/pdf" />
+
+                        <div style="margin-top:8px;">
+                            <button id="confirmDeliveryBtn" class="btn-apply" type="button">Confirmar entrega</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast -->
+        <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+    </main>
+
+    <script type="module" src="../assets/js/sidebar-user.js"></script>
+    <script type="module" src="../assets/js/orders-admin.js"></script>
+</body>
+
+</html>

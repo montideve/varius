@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Crear cuenta</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        /* Pequeños estilos de ayuda si no tienes reglas en styles.css */
+        .input-row {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 20px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .input-alert {
+            color: #b71c1c;
+            font-size: 13px;
+            min-height: 18px;
+        }
+
+        .password-requirements {
+            font-size: 13px;
+            margin: 6px 0 0 0;
+            padding-left: 16px;
+        }
+
+        .password-requirements li {
+            list-style: disc;
+            color: #666;
+        }
+
+        .password-requirements li.met {
+            color: #137333;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="page-center">
+        <section class="card">
+            <h1 class="title">Crear cuenta</h1>
+
+            <form id="register-form" novalidate>
+                <label class="form-label" for="reg-email">Correo</label>
+                <div class="input-row">
+                    <input id="reg-email" class="input-field" type="email" placeholder="ejemplo@correo.com" required
+                        aria-describedby="reg-email-alert">
+                    <div id="reg-email-alert" class="input-alert" aria-live="polite"></div>
+                </div>
+
+                <label class="form-label" for="reg-password">Contraseña</label>
+                <div class="input-row" style="position:relative;">
+                    <input id="reg-password" class="input-field" type="password" placeholder="Contraseña" required
+                        aria-describedby="reg-password-alert reg-password-reqs">
+                    <button id="reg-toggle-password" type="button" class="password-toggle"
+                        aria-label="Mostrar u ocultar contraseña">👁️</button>
+                    <div id="reg-password-alert" class="input-alert" aria-live="polite"></div>
+
+                    <!-- Requisitos visibles para registro manual -->
+                    <ul id="reg-password-reqs" class="password-requirements" aria-live="polite">
+                        <li id="req-length">Mínimo 8 caracteres</li>
+                        <li id="req-upper">Al menos una letra mayúscula (A-Z)</li>
+                        <li id="req-lower">Al menos una letra minúscula (a-z)</li>
+                        <li id="req-number">Al menos un número (0-9)</li>
+                    </ul>
+                </div>
+
+                <label class="form-label">Rol</label>
+                <select id="reg-role" class="input-field" style="height:var(--input-height);">
+                    <option value="vendedor">Vendedor</option>
+                    <option value="motorizado">Motorizado</option>
+                    <option value="administrador">Administrador</option>
+                </select>
+
+                <div style="margin-top:12px; display:flex; gap:12px; flex-direction:column;">
+                    <button type="submit" class="btn btn-primary">Crear cuenta</button>
+
+                    <!-- Botón Google para registrar con Google -->
+                    <button id="google-signin" type="button" class="btn btn-google" aria-label="Registrarse con Google">
+                        <!-- simple icon (SVG) -->
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"
+                            focusable="false">
+                            <path
+                                d="M21.35 11.1H12v2.8h5.35c-.23 1.3-1 2.4-2.14 3.14v2.6h3.45C20.36 18.43 22 15.12 22 12c0-.6-.06-1.18-.17-1.9z"
+                                fill="#4285F4" />
+                            <path
+                                d="M12 22c2.7 0 4.98-.9 6.64-2.42l-3.45-2.6c-.96.64-2.2 1.02-3.19 1.02-2.45 0-4.52-1.66-5.26-3.9H3.13v2.45C4.8 19.96 8.11 22 12 22z"
+                                fill="#34A853" />
+                            <path
+                                d="M6.74 13.1A5.995 5.995 0 0 1 6.5 12c0-.36.05-.72.13-1.06V8.49H3.13A9.979 9.979 0 0 0 2 12c0 1.61.36 3.13 1.01 4.49l3.73-3.39z"
+                                fill="#FBBC05" />
+                            <path
+                                d="M12 6.5c1.47 0 2.8.5 3.84 1.48l2.88-2.88C16.97 2.95 14.7 2 12 2 8.11 2 4.8 4.04 3.13 7.04L6.5 9.5C7.48 7.16 9.55 6.5 12 6.5z"
+                                fill="#EA4335" />
+                        </svg>
+                        <span>Continuar con Google</span>
+                    </button>
+                </div>
+
+                <div class="center mt-8" style="margin-top:16px;">
+                    <a href="index.html" class="muted">Volver a iniciar sesión</a>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <!-- Modal reutilizable para errores / éxito (reutilizar también en login) -->
+    <div id="app-modal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="modal-card" role="document">
+            <div class="modal-header">
+                <strong id="modal-title">Aviso</strong>
+            </div>
+            <div id="modal-body" class="modal-body">
+                Mensaje...
+            </div>
+            <div class="modal-actions">
+                <button id="modal-ok" class="btn btn-primary">Aceptar</button>
+                <button id="modal-close" class="btn btn-ghost">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="assets/js/auth.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vendedor - Panel</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Barra lateral">
+      <div class="brand">
+        <div class="logo">V</div>
+        <div class="app-name">FinSet</div>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Navegación">
+        <a href="#dashboard" class="nav-item"><span>📊</span><span>Dashboard</span></a>
+        <a href="#productos" class="nav-item"><span>🛍️</span><span>Productos</span></a>
+        <a href="#pedidos" class="nav-item"><span>🧾</span><span>Pedidos</span></a>
+        <a href="#clientes" class="nav-item"><span>👥</span><span>Clientes</span></a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="btn btn-ghost">Ayuda</button>
+        <button class="logout-btn">Cerrar sesión</button>
+      </div>
+    </aside>
+
+    <main class="canvas">
+      <header class="header">
+        <div class="header-left">
+          <button id="menuToggle" class="menu-toggle" aria-label="Abrir menú">☰</button>
+          <div>
+            <div class="header-title">Dashboard - Vendedor</div>
+            <div class="small">Ventas y stock</div>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <div class="search">
+            <svg width="16" height="16" viewBox="0 0 24 24">
+              <path fill="#6b7280" d="M21 21l-4.35-4.35" />
+            </svg>
+            <input type="search" placeholder="Buscar producto, pedido..." aria-label="Buscar">
+          </div>
+
+          <button class="icon-btn">🔔</button>
+          <div class="avatar"><img src="https://i.pravatar.cc/100?u=vendedor" alt="avatar"></div>
+        </div>
+      </header>
+
+      <section class="metrics-grid" style="margin-top:6px;">
+        <div class="metric">
+          <div class="label">Total ventas (7d)</div>
+          <div class="value">$12,345</div>
+          <div class="meta"><span class="pulse-up">+8%</span><span class="small">vs semana anterior</span></div>
+        </div>
+
+        <div class="metric">
+          <div class="label">Pedidos</div>
+          <div class="value">89</div>
+          <div class="meta"><span class="small">Tiempo medio: 22 min</span></div>
+        </div>
+
+        <div class="metric">
+          <div class="label">Productos</div>
+          <div class="value">56</div>
+          <div class="meta"><span class="small">Stock bajo: 4</span></div>
+        </div>
+      </section>
+
+      <section class="content-grid" style="margin-top:12px;">
+        <div>
+          <div class="chart-card">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-weight:800">Ventas - Últimos 30 días</div>
+              <div class="small">Mes actual</div>
+            </div>
+            <div
+              style="height:220px;margin-top:12px;border-radius:8px;background:linear-gradient(180deg,#faf7ff,#fff);display:flex;align-items:center;justify-content:center;color:var(--muted);">
+              Gráfica (placeholder)</div>
+          </div>
+
+          <div class="chart-card" style="margin-top:12px;">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-weight:800">Top productos</div>
+              <div class="small">Hoy</div>
+            </div>
+            <div style="margin-top:12px; display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+              <div class="card widget">
+                <div style="font-weight:700">Pizza Margarita</div>
+                <div class="small">$7.990 • 12 vendidos</div>
+              </div>
+              <div class="card widget">
+                <div style="font-weight:700">Hamburguesa</div>
+                <div class="small">$5.990 • 8 vendidos</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="stats">
+          <div class="chart-card">
+            <div style="font-weight:800">Pedidos recientes</div>
+            <div style="margin-top:8px;color:var(--muted)">
+              <div>#ORD-102 • 2 ítems • 25min</div>
+              <div>#ORD-101 • 1 ítem • 10min</div>
+            </div>
+            <div style="margin-top:12px"><button class="btn btn-primary" style="width:100%">Ver pedidos</button></div>
+          </div>
+
+          <div class="chart-card">
+            <div style="font-weight:800">Acciones</div>
+            <div style="margin-top:8px;display:flex;flex-direction:column;gap:8px;">
+              <button class="btn btn-primary">+ Nuevo producto</button>
+              <button class="btn btn-action">Exportar ventas</button>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section id="dashboard" class="page-content hidden"></section>
+      <section id="productos" class="page-content hidden"></section>
+      <section id="pedidos" class="page-content hidden"></section>
+      <section id="clientes" class="page-content hidden"></section>
+    </main>
+  </div>
+
+  <script type="module">
+    import { initDashboard } from './assets/js/dashboard.js';
+    initDashboard();
+  </script>
+</body>
+
+</html>

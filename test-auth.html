@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Test Firebase Auth</title>
+</head>
+
+<body>
+    <h3>Test Firebase Auth</h3>
+
+    <div>
+        <input id="email" placeholder="email@example.com" value="test@example.com" />
+        <input id="pass" placeholder="password" value="password123" />
+        <button id="create">Crear con Email/Password</button>
+        <button id="login">Iniciar sesión Email/Password</button>
+    </div>
+
+    <div style="margin-top:12px;">
+        <button id="google">Iniciar con Google (popup)</button>
+    </div>
+
+    <pre id="out" style="background:#111;color:#0f0;padding:12px;height:200px;overflow:auto;"></pre>
+
+    <script type="module">
+        const out = msg => {
+            console.log(msg);
+            const pre = document.getElementById('out');
+            pre.textContent += typeof msg === 'string' ? msg + '\n' : JSON.stringify(msg, null, 2) + '\n';
+        };
+
+        // Pega aquí tu firebaseConfig EXACTO (igual que en assets/js/firebase-config.js)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDumYK72kLvZfgZJU8ZgJ_8Wlx6sk_Z0Qw",
+            authDomain: "varius-7de76.firebaseapp.com",
+            projectId: "varius-7de76",
+            storageBucket: "varius-7de76.appspot.com",
+            messagingSenderId: "618912356955",
+            appId: "1:618912356955:web:1e57c35d63ba39c2ea7d7e",
+            measurementId: "G-TVJC9EKN6R"
+        };
+
+        import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+
+        const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        out('Firebase app options (test): ' + JSON.stringify(app.options));
+
+        document.getElementById('google').addEventListener('click', async () => {
+            try {
+                const provider = new GoogleAuthProvider();
+                const res = await signInWithPopup(auth, provider);
+                out('Google sign-in success: ' + res.user.uid);
+            } catch (err) {
+                out('Auth error (full):');
+                out(err);
+                out('Auth error code: ' + (err.code || ''));
+                out('Auth error message: ' + (err.message || ''));
+            }
+        });
+
+        document.getElementById('create').addEventListener('click', async () => {
+            const e = document.getElementById('email').value;
+            const p = document.getElementById('pass').value;
+            try {
+                const res = await createUserWithEmailAndPassword(auth, e, p);
+                out('Created user: ' + res.user.uid);
+            } catch (err) {
+                out('Create error code: ' + (err.code || ''));
+                out('Create error message: ' + (err.message || ''));
+                out(err);
+            }
+        });
+
+        document.getElementById('login').addEventListener('click', async () => {
+            const e = document.getElementById('email').value;
+            const p = document.getElementById('pass').value;
+            try {
+                const res = await signInWithEmailAndPassword(auth, e, p);
+                out('Login success: ' + res.user.uid);
+            } catch (err) {
+                out('Login error code: ' + (err.code || ''));
+                out('Login error message: ' + (err.message || ''));
+                out(err);
+            }
+        });
+    </script>
+</body>
+
+</html>

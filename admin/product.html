@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Productos — Varius</title>
+    <link rel="stylesheet" href="assets/css/styles-pruducts.css">
+    <link rel="stylesheet" href="assets/css/admin-products.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script type="module" src="../assets/js/auth-guard.js"></script>
+</head>
+
+<body>
+    <input id="nav-toggle" type="checkbox" class="nav-toggle" aria-hidden="true">
+
+    <!-- Top bar -->
+    <header class="topbar">
+        <div class="top-left">
+            <label for="nav-toggle" class="hamburger" aria-hidden="true">
+                <span class="hamburger-box"><span class="hamburger-inner"></span></span>
+            </label>
+            <a class="brand" href="./" aria-label="Dashboard">
+                <span class="logo" aria-hidden="true">
+                    <!-- simple logo svg -->
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <rect x="3" y="3" width="6" height="18" rx="1.5" fill="#2b6ef6"></rect>
+                        <rect x="10.5" y="9" width="6" height="12" rx="1.5" fill="#60c3ff"></rect>
+                        <rect x="18" y="15" width="3" height="6" rx="1.5" fill="#9bdc8e"></rect>
+                    </svg>
+                </span>
+                <span class="brand-text">Varius</span>
+            </a>
+        </div>
+
+        <div class="top-search">
+            <label for="q" class="sr-only">Buscar</label>
+            <input id="q" type="search" placeholder="Search..." aria-label="Buscar" />
+        </div>
+
+
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Navegación principal">
+        <nav>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="./" class="nav-link">
+                        <span class="nav-icon" aria-hidden="true">🏠</span>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+
+                <!----
+                <li class="nav-item">
+                    <details class="nav-dropdown">
+                        <summary class="nav-link summary-link">
+                            <span class="nav-icon" aria-hidden="true">📊</span>
+                            <span class="nav-text">Analytics</span>
+                        </summary>
+                        <ul class="sub-list">
+                            <li><a href="#">Visión general</a></li>
+                            <li><a href="#">Tráfico</a></li>
+                            <li><a href="#">Conversiones</a></li>
+                        </ul>
+                    </details>
+                </li>
+                ---->
+
+                <!-- Customers -->
+                <li class="nav-item">
+                    <a href="usuarios.html" class="nav-link">
+                        <span class="nav-icon" aria-hidden="true">👥</span>
+                        <span class="nav-text">Usuarios</span>
+                    </a>
+                </li>
+
+                <!-- Reports -->
+                <li class="nav-item active">
+                    <a href="./product.html" class="nav-link">
+                        <span class="nav-icon" aria-hidden="true">📦</span>
+                        <span class="nav-text">Productos</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="orders.html" class="nav-link">
+                        <span class="nav-icon" aria-hidden="true">📋</span>
+                        <span class="nav-text">Pedidos</span>
+                    </a>
+                </li>
+
+            </ul>
+
+            <!-- bottom user block -->
+            <div class="sidebar-user">
+                <div class="sidebar-user-info">
+                    <span class="avatar circle"></span>
+                    <div class="user-meta">
+                        <div class="name"></div>
+                        <div class="email"></div>
+                    </div>
+                </div>
+                <a href="#" class="logout-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-power" viewBox="0 0 16 16">
+                        <path d="M7.5 1v7h1V1z" />
+                        <path
+                            d="M3 8.812a5 5 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812" />
+                    </svg>
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+
+        <section class="table-wrap card">
+            <div class="table-header">
+                <h3>Gestión de Productos</h3>
+                <button id="openAddBtn" class="btn-add">
+                    <span class="plus">+</span> Añadir producto
+                </button>
+            </div>
+            <div class="table-scroll">
+                <main class="container">
+                    <section class="filters-card">
+                        <div class="search-row">
+                            <div class="search">
+                                <svg class="icon" viewBox="0 0 24 24" width="18" height="18">
+                                    <path fill="currentColor"
+                                        d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16a6.471 6.471 0 004.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zM10 15a5 5 0 110-10 5 5 0 010 10z">
+                                    </path>
+                                </svg>
+                                <input id="searchInput" type="text" placeholder="Buscar por nombre..." />
+                            </div>
+
+                            <select id="stateFilter" class="filter-select">
+                                <option value="">Todos los estados</option>
+                                <option value="Activo">Activo</option>
+                                <option value="Inactivo">Inactivo</option>
+                            </select>
+
+                            <select id="offerFilter" class="filter-select">
+                                <option value="">Todas las ofertas</option>
+                                <option value="en_oferta">En oferta</option>
+                                <option value="no_oferta">No</option>
+                            </select>
+                        </div>
+                    </section>
+
+                    <section class="table-card">
+                        <table id="productsTable" aria-live="polite" role="table">
+                            <thead>
+                                <tr>
+                                    <th>Imagen</th>
+                                    <th>Nombre</th>
+                                    <th>Precio</th>
+                                    <th>Oferta</th>
+                                    <th>Descuento</th>
+                                    <th>Precio Oferta</th>
+                                    <th>Stock</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsBody">
+                                <!-- Filas renderizadas por JS -->
+                            </tbody>
+                        </table>
+                    </section>
+                </main>
+            </div>
+        </section>
+
+        <!-- Modal -->
+        <div id="productModal" class="modal hidden" aria-hidden="true" role="dialog" aria-modal="true">
+            <div class="modal-content">
+                <header class="modal-header">
+                    <h2 id="modalTitle">Agregar Producto</h2>
+                    <button id="closeModal" class="close-btn" aria-label="Cerrar">&times;</button>
+                </header>
+
+                <form id="productForm" class="modal-form" novalidate>
+                    <input type="hidden" id="productId" />
+                    <div class="form-row">
+                        <label>Nombre <span class="required">*</span></label>
+                        <input id="name" type="text" required />
+                    </div>
+
+                    <div class="form-row">
+                        <label>Descripción</label>
+                        <textarea id="description" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <label>Precio (CLP) <span class="required">*</span></label>
+                        <input id="price" type="number" min="0" required />
+                    </div>
+
+                    <div class="form-row inline">
+                        <div>
+                            <label>Categoría <span class="required">*</span></label>
+                            <select id="category" required>
+                                <option value="">Seleccionar categoría</option>
+                                <option>Ropa</option>
+                                <option>Electrónica</option>
+                                <option>Hogar</option>
+                                <option>Accesorios</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label>Estado</label>
+                            <select id="status">
+                                <option>Activo</option>
+                                <option>Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row inline">
+                        <label class="checkbox-row">
+                            <input id="onOffer" type="checkbox" />
+                            <span>En oferta</span>
+                        </label>
+
+                        <div>
+                            <label>Descuento (%)</label>
+                            <input id="discount" type="number" min="0" max="100" value="0" />
+                        </div>
+
+                        <div>
+                            <label>Stock</label>
+                            <input id="stock" type="number" min="0" value="0" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label>Imagen</label>
+                        <input id="imageFile" type="file" accept="image/*" />
+                    </div>
+
+                    <div class="form-row">
+                        <label>SKU <small>(generado automáticamente según categoría)</small></label>
+                        <input id="sku" type="text" readonly placeholder="Se generará al seleccionar categoría" />
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Guardar</button>
+                        <button type="button" id="cancelBtn" class="btn-secondary">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    <!-- Toast -->
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+    <script type="module" src="../assets/js/sidebar-user.js"></script>
+    <script type="module" src="../assets/js/product-admin.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,1117 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Multi-Role Dashboard (Admin / Vendedor / Delivery)</title>
+    <style>
+        /* Mobile-first styles, CSS Grid + Flexbox */
+        /* Variables */
+        :root {
+            --bg: #f7f7fb;
+            --card: #ffffff;
+            --muted: #6b7280;
+            --accent: #3b82f6;
+            --accent-2: #10b981;
+            --text: #111827;
+            --shadow: 0 6px 18px rgba(20, 20, 30, 0.05);
+            --radius: 12px;
+            --gap: 1rem;
+            --max-width: 1200px;
+            --transition: 180ms ease;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body,
+        #app {
+            height: 100%
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.35;
+        }
+
+        /* Layout */
+        .app {
+            display: flex;
+            min-height: 100vh;
+            align-items: stretch
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            min-width: 60px;
+            padding: 1rem;
+            background: linear-gradient(180deg, #fff, #fcfdff);
+            border-right: 1px solid #eef2f7;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: width var(--transition);
+        }
+
+        .sidebar.collapsed {
+            width: 72px
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: .5rem
+        }
+
+        .brand .brand-name {
+            font-weight: 700;
+            color: var(--accent)
+        }
+
+        .btn-icon {
+            border: 0;
+            background: transparent;
+            padding: .25rem .5rem;
+            border-radius: 8px;
+            cursor: pointer
+        }
+
+        .nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: .4rem
+        }
+
+        .nav-link {
+            background: transparent;
+            border: 0;
+            text-align: left;
+            padding: .6rem;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--muted)
+        }
+
+        .nav-link:focus,
+        .nav-link:hover {
+            background: #f1f5f9;
+            color: var(--text);
+            outline: none
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            font-size: .9rem;
+            color: var(--muted)
+        }
+
+        /* Main */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #edf2f7;
+            background: transparent
+        }
+
+        .header .search input {
+            padding: .6rem .8rem;
+            border-radius: 8px;
+            border: 1px solid #e6e9ef;
+            min-width: 180px
+        }
+
+        .header-right {
+            display: flex;
+            gap: .5rem;
+            align-items: center
+        }
+
+        .btn {
+            background: var(--accent);
+            color: white;
+            padding: .5rem .7rem;
+            border-radius: 8px;
+            border: 0;
+            cursor: pointer
+        }
+
+        .btn[disabled] {
+            opacity: .6;
+            cursor: not-allowed
+        }
+
+        /* Content area */
+        .content {
+            padding: 1rem;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            flex: 1
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--gap)
+        }
+
+        .card {
+            background: var(--card);
+            padding: 1rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: var(--gap)
+        }
+
+        .card.wide {
+            grid-column: 1/-1
+        }
+
+        .target-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center
+        }
+
+        /* Metrics */
+        .metrics {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap
+        }
+
+        .metric {
+            flex: 1;
+            min-width: 120px;
+            padding: .5rem;
+            background: #fafbff;
+            border-radius: 10px
+        }
+
+        .metric-value {
+            font-weight: 700;
+            font-size: 1.2rem
+        }
+
+        /* Table */
+        .table-controls {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: .5rem
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: transparent
+        }
+
+        .data-table thead th {
+            background: #f8fafc;
+            padding: .6rem;
+            text-align: left;
+            font-size: .9rem;
+            color: var(--muted)
+        }
+
+        .data-table tbody td {
+            padding: .6rem;
+            border-top: 1px solid #f1f5f9
+        }
+
+        .sort {
+            background: transparent;
+            border: 0;
+            color: var(--muted);
+            cursor: pointer
+        }
+
+        .sort:after {
+            content: ' ↕';
+            font-size: .8em;
+            color: #cbd5e1
+        }
+
+        /* Deliveries list */
+        .delivery-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: .6rem
+        }
+
+        .delivery-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: .6rem;
+            border-radius: 8px;
+            background: #fcfeff;
+            border: 1px solid #f1f5f9
+        }
+
+        .delivery-item .meta {
+            display: flex;
+            gap: .6rem;
+            align-items: center
+        }
+
+        /* Footer */
+        .footer {
+            padding: 1rem;
+            border-top: 1px solid #edf2f7;
+            background: transparent;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(8, 10, 15, 0.35);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition)
+        }
+
+        .modal[aria-hidden="false"] {
+            opacity: 1;
+            pointer-events: auto
+        }
+
+        .modal-content {
+            background: var(--card);
+            padding: 1rem;
+            border-radius: 10px;
+            min-width: 320px;
+            max-width: 90%;
+            box-shadow: var(--shadow);
+            position: relative
+        }
+
+        /* Small text helper */
+        .small {
+            font-size: .85rem;
+            color: var(--muted)
+        }
+
+        /* Gauge */
+        .gauge {
+            position: relative;
+            width: 100%;
+            height: 80px
+        }
+
+        .gauge svg {
+            width: 100%;
+            height: 100%
+        }
+
+        .gauge-center {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        #gaugePercent {
+            font-weight: 700
+        }
+
+        /* Accessibility helpers */
+        .sr-only {
+            position: absolute !important;
+            height: 1px;
+            width: 1px;
+            overflow: hidden;
+            clip: rect(1px, 1px, 1px, 1px);
+            white-space: nowrap
+        }
+
+        /* Responsive breakpoints - mobile-first */
+        @media(min-width:768px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            .card.wide {
+                grid-column: 1/-1
+            }
+
+            .sidebar {
+                width: 240px
+            }
+        }
+
+        @media(min-width:1024px) {
+            .content {
+                padding: 2rem
+            }
+
+            .grid {
+                grid-template-columns: repeat(3, 1fr)
+            }
+
+            .card.wide {
+                grid-column: 1/4
+            }
+
+            .sidebar {
+                width: 260px
+            }
+        }
+
+        /* Dark theme */
+        body.dark {
+            --bg: #0b1220;
+            --card: #0f1724;
+            --muted: #9aa4b2;
+            --text: #e6eef8;
+            --accent: #60a5fa;
+            --shadow: 0 6px 18px rgba(2, 6, 23, 0.7)
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="app">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar" aria-label="Main Navigation">
+            <div class="brand">
+                <button id="sidebarToggle" class="btn-icon" aria-label="Toggle sidebar" aria-expanded="true">☰</button>
+                <span class="brand-name">MultiDash</span>
+            </div>
+            <nav class="nav" role="navigation" aria-label="Sidebar menu">
+                <ul>
+                    <li><button class="nav-link" data-target="overview" tabindex="0">Dashboard</button></li>
+                    <li><button class="nav-link" data-target="customers" tabindex="0">Customers</button></li>
+                    <li><button class="nav-link" data-target="orders" tabindex="0">Orders</button></li>
+                    <li><button class="nav-link" data-target="deliveries" tabindex="0">Deliveries</button></li>
+                    <li><button class="nav-link" data-target="reports" tabindex="0">Reports</button></li>
+                    <li><button class="nav-link" data-target="settings" tabindex="0">Settings</button></li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="small">Theme</div>
+                <div class="btn-group">
+                    <button id="themeToggle" class="btn">Toggle Theme</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main area -->
+        <div class="main">
+            <header class="header" role="banner">
+                <div class="header-left">
+                    <div class="search">
+                        <input id="globalSearch" type="search" placeholder="Search..." aria-label="Global search" />
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <label for="roleSelect" class="sr-only">Select role</label>
+                    <select id="roleSelect" aria-label="Select dashboard role">
+                        <option value="admin">Administrator</option>
+                        <option value="vendedor">Vendedor (Sales)</option>
+                        <option value="delivery">Delivery (Motorizado)</option>
+                    </select>
+
+                    <button id="notifBtn" class="btn-icon" aria-label="Notifications" title="Notifications">🔔<span
+                            class="notif-badge" aria-hidden="true">3</span></button>
+
+                    <div class="profile" tabindex="0" role="button" aria-haspopup="true" aria-expanded="false"
+                        id="profileBtn">
+                        <img class="avatar" src="" alt="User avatar" aria-hidden="true" />
+                        <span class="profile-name">You</span>
+                    </div>
+                </div>
+            </header>
+
+            <main class="content" id="content" role="main">
+                <!-- Overview (common) -->
+                <section id="overview" class="view" data-role="admin vendedor delivery"
+                    aria-labelledby="overview-title">
+                    <div class="grid">
+                        <div class="card">
+                            <h3 id="overview-title">Key Metrics</h3>
+                            <div class="metrics">
+                                <div class="metric">
+                                    <div class="metric-label">Customers</div>
+                                    <div class="metric-value" id="metric-customers">-</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-label">Orders</div>
+                                    <div class="metric-value" id="metric-orders">-</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-label">Revenue</div>
+                                    <div class="metric-value" id="metric-revenue">-</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-label">Active Deliveries</div>
+                                    <div class="metric-value" id="metric-deliveries">-</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3>Monthly Sales</h3>
+                            <canvas id="barChart" width="600" height="200"
+                                aria-label="Monthly sales bar chart"></canvas>
+                        </div>
+
+                        <div class="card target-card">
+                            <h3>Monthly Target</h3>
+                            <div class="gauge" id="gauge" aria-hidden="true">
+                                <svg viewBox="0 0 100 50" preserveAspectRatio="none">
+                                    <path id="gauge-bg" d="M5 45 A45 45 0 0 1 95 45" stroke="#eee" stroke-width="8"
+                                        fill="none" />
+                                    <path id="gauge-fill" d="M5 45 A45 45 0 0 1 95 45" stroke="#4285F4" stroke-width="8"
+                                        fill="none" stroke-linecap="round" transform-origin="50% 50%" />
+                                </svg>
+                                <div class="gauge-center">
+                                    <div id="gaugePercent">0%</div>
+                                </div>
+                            </div>
+                            <p class="small">Progress toward monthly revenue target.</p>
+                        </div>
+
+                        <div class="card wide">
+                            <h3>Statistics</h3>
+                            <canvas id="lineChart" width="900" height="200" aria-label="Trend statistics"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Customers -->
+                <section id="customers" class="view" data-role="admin vendedor" aria-labelledby="customers-title"
+                    hidden>
+                    <div class="card">
+                        <h3 id="customers-title">Customers</h3>
+                        <div class="table-controls">
+                            <input id="customerFilter" type="search" placeholder="Filter customers..."
+                                aria-label="Filter customers" />
+                            <div>
+                                <label for="pageSize">Rows</label>
+                                <select id="pageSize">
+                                    <option>5</option>
+                                    <option selected>10</option>
+                                    <option>25</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <table id="customersTable" class="data-table" aria-describedby="customers-title">
+                            <thead>
+                                <tr>
+                                    <th><button class="sort" data-key="id">ID</button></th>
+                                    <th><button class="sort" data-key="name">Name</button></th>
+                                    <th><button class="sort" data-key="email">Email</button></th>
+                                    <th><button class="sort" data-key="orders">Orders</button></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Orders -->
+                <section id="orders" class="view" data-role="admin vendedor" aria-labelledby="orders-title" hidden>
+                    <div class="card">
+                        <h3 id="orders-title">Orders</h3>
+
+                        <div class="table-controls">
+                            <input id="orderFilter" type="search" placeholder="Filter orders..."
+                                aria-label="Filter orders" />
+                            <button id="newOrderBtn" class="btn">Create Order</button>
+                        </div>
+
+                        <table id="ordersTable" class="data-table" aria-describedby="orders-title">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Customer</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Deliveries -->
+                <section id="deliveries" class="view" data-role="admin delivery" aria-labelledby="deliveries-title"
+                    hidden>
+                    <div class="card">
+                        <h3 id="deliveries-title">Deliveries & Routes</h3>
+
+                        <div class="deliveries-controls">
+                            <button id="optimizeBtn" class="btn">Optimize Route</button>
+                            <button id="locateBtn" class="btn">Locate All</button>
+                        </div>
+
+                        <ul id="deliveryList" class="delivery-list" role="list"></ul>
+                    </div>
+                </section>
+
+                <!-- Reports -->
+                <section id="reports" class="view" data-role="admin vendedor" aria-labelledby="reports-title" hidden>
+                    <div class="card">
+                        <h3 id="reports-title">Reports</h3>
+                        <p class="small">Export data or generate PDF (mock)</p>
+                        <div class="reports-grid">
+                            <button class="btn">Export CSV</button>
+                            <button class="btn">Generate PDF</button>
+                            <label class="small">From <input type="date" id="rFrom" /></label>
+                            <label class="small">To <input type="date" id="rTo" /></label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Settings -->
+                <section id="settings" class="view" data-role="admin" aria-labelledby="settings-title" hidden>
+                    <div class="card">
+                        <h3 id="settings-title">System Settings</h3>
+                        <form id="settingsForm">
+                            <label>Site name <input id="siteName" type="text" /></label>
+                            <label>Default currency <input id="currency" type="text" /></label>
+                            <label><input id="emailReports" type="checkbox" /> Send daily email reports</label>
+                            <button class="btn" type="submit">Save</button>
+                        </form>
+                    </div>
+                </section>
+
+            </main>
+
+            <footer class="footer" role="contentinfo">
+                <div>© <span id="year"></span> MultiDash — Built with HTML, CSS and JS</div>
+                <div class="footer-links">
+                    <a href="#" aria-label="Documentation">Docs</a>
+                    <a href="#" aria-label="Support">Support</a>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modalTitle">
+        <div class="modal-content">
+            <button id="modalClose" class="btn-icon" aria-label="Close modal">✕</button>
+            <h2 id="modalTitle"></h2>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        /* app.js - Multi-role dashboard interactivity (vanilla JS)
+   Key features:
+   - Role switching and rendering views (persisted to localStorage)
+   - Sidebar collapse toggle (persisted)
+   - Theme toggle (persisted)
+   - Mock data for admin, vendedor and delivery
+   - Simple canvas charts (bar & line)
+   - Table sorting & filtering
+   - Modal window handling
+   - Accessibility (keyboard handlers, ARIA updates)
+
+   Role switching logic:
+   - Each view element (section.view) has a data-role attribute listing roles allowed (space-separated)
+   - When the selected role changes, we:
+     1. Persist the role in localStorage
+     2. Set the roleSelect value
+     3. Iterate all .view sections and show/hide based on whether the new role is included
+     4. Update the nav so that links navigate to allowed sections
+   - This ensures a simple, client-side role-based UI layer with sample content for each role.
+*/
+
+        (() => {
+            // Utilities
+            const $ = sel => document.querySelector(sel);
+            const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+            // Elements
+            const roleSelect = $('#roleSelect');
+            const sidebar = $('#sidebar');
+            const sidebarToggle = $('#sidebarToggle');
+            const themeToggle = $('#themeToggle');
+            const modal = $('#modal');
+            const modalTitle = $('#modalTitle');
+            const modalBody = $('#modalBody');
+            const modalClose = $('#modalClose');
+            const navLinks = $$('.nav-link');
+            const views = $$('.view');
+            const yearEl = $('#year');
+
+            // State keys
+            const LS_KEYS = {
+                role: 'md_role',
+                sidebarCollapsed: 'md_sidebar_collapsed',
+                theme: 'md_theme',
+                prefs: 'md_prefs'
+            };
+
+            // Simple mock data
+            const MOCK = {
+                admin: {
+                    metrics: { customers: 3782, orders: 5359, revenue: 120430, deliveries: 24 },
+                    monthlySales: [120, 300, 180, 250, 140, 160, 220, 80, 150, 320, 240, 90],
+                    stats: [150, 170, 160, 155, 165, 170, 180, 200, 210, 230, 240, 235]
+                },
+                vendedor: {
+                    metrics: { customers: 1240, orders: 980, revenue: 63420, deliveries: 6 },
+                    monthlySales: [40, 140, 90, 120, 80, 110, 180, 30, 90, 210, 145, 55],
+                    stats: [50, 80, 110, 105, 130, 140, 150, 160, 170, 185, 190, 185],
+                    customers: [
+                        { id: 1, name: 'María Ruiz', email: 'maria@example.com', orders: 12 },
+                        { id: 2, name: 'Carlos Vega', email: 'carlos@example.com', orders: 5 },
+                        { id: 3, name: 'Ana López', email: 'ana@example.com', orders: 9 },
+                        { id: 4, name: 'Pedro Jiménez', email: 'pedro@example.com', orders: 2 },
+                        { id: 5, name: 'Lucía Gómez', email: 'lucia@example.com', orders: 14 },
+                    ],
+                    orders: [
+                        { id: 'A100', customer: 'María Ruiz', amount: 240.00, status: 'Processing' },
+                        { id: 'A102', customer: 'Carlos Vega', amount: 75.00, status: 'Shipped' },
+                        { id: 'A109', customer: 'Ana López', amount: 120.00, status: 'Pending' },
+                    ]
+                },
+                delivery: {
+                    metrics: { customers: 1200, orders: 1890, revenue: 84230, deliveries: 12 },
+                    monthlySales: [30, 90, 65, 80, 60, 75, 120, 25, 60, 150, 90, 40],
+                    stats: [80, 100, 95, 98, 110, 120, 130, 140, 150, 160, 170, 165],
+                    deliveries: [
+                        { id: 'D-01', address: 'Av. Central 123', eta: '10:20', distance: 2.4, status: 'En route', lat: 40.7128, lon: -74.0060 },
+                        { id: 'D-02', address: 'Calle Falsa 456', eta: '10:45', distance: 5.1, status: 'Pending', lat: 40.7138, lon: -74.0010 },
+                        { id: 'D-03', address: 'Plaza Mayor 8', eta: '11:10', distance: 8.6, status: 'Delivered', lat: 40.7090, lon: -74.0100 },
+                    ]
+                }
+            };
+
+            // Initialize UI
+            function init() {
+                // Load preferences
+                const savedRole = localStorage.getItem(LS_KEYS.role) || 'admin';
+                const collapsed = (localStorage.getItem(LS_KEYS.sidebarCollapsed) === 'true');
+                const theme = localStorage.getItem(LS_KEYS.theme) || 'light';
+
+                // Set header year
+                yearEl.textContent = new Date().getFullYear();
+
+                // Apply initial states
+                if (collapsed) sidebar.classList.add('collapsed');
+                if (theme === 'dark') document.body.classList.add('dark');
+
+                // Bind events
+                roleSelect.addEventListener('change', e => setRole(e.target.value));
+                sidebarToggle.addEventListener('click', toggleSidebar);
+                themeToggle.addEventListener('click', toggleTheme);
+                navLinks.forEach(btn => btn.addEventListener('click', navHandler));
+                modalClose.addEventListener('click', closeModal);
+                modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+                document.addEventListener('keydown', handleKeydown);
+
+                // Table controls
+                $('#customerFilter')?.addEventListener('input', applyCustomerFilter);
+                $$('#customersTable .sort').forEach(s => s.addEventListener('click', sortCustomers));
+
+                $('#orderFilter')?.addEventListener('input', applyOrderFilter);
+                $('#newOrderBtn')?.addEventListener('click', createOrderModal);
+
+                // Deliveries controls
+                $('#optimizeBtn')?.addEventListener('click', optimizeRoutes);
+                $('#locateBtn')?.addEventListener('click', locateAll);
+
+                // Modal close on Esc
+                // Load saved role and render
+                roleSelect.value = savedRole;
+                setRole(savedRole, { initial: true });
+
+                // Draw charts
+                drawAllChartsForRole(savedRole);
+
+                // Populate customers and orders if applicable
+                populateCustomers();
+                populateOrders();
+                populateDeliveries();
+
+                // Keyboard focus for profile (mock)
+                $('#profileBtn')?.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') alert('Profile menu placeholder');
+                });
+            }
+
+            // Role switching
+            function setRole(role, opts = {}) {
+                // Persist role
+                localStorage.setItem(LS_KEYS.role, role);
+                roleSelect.value = role;
+
+                // Show/hide views according to data-role attribute
+                views.forEach(view => {
+                    const allowed = (view.getAttribute('data-role') || '').split(/\s+/).filter(Boolean);
+                    if (allowed.includes(role)) {
+                        view.hidden = false;
+                        view.setAttribute('aria-hidden', 'false');
+                    } else {
+                        view.hidden = true;
+                        view.setAttribute('aria-hidden', 'true');
+                    }
+                });
+
+                // Update header metrics and charts for the selected role
+                updateMetricsForRole(role);
+                drawAllChartsForRole(role);
+            }
+
+            // Toggle sidebar collapse
+            function toggleSidebar() {
+                sidebar.classList.toggle('collapsed');
+                const collapsed = sidebar.classList.contains('collapsed');
+                sidebarToggle.setAttribute('aria-expanded', String(!collapsed));
+                localStorage.setItem(LS_KEYS.sidebarCollapsed, String(collapsed));
+            }
+
+            // Theme toggle
+            function toggleTheme() {
+                const isDark = document.body.classList.toggle('dark');
+                localStorage.setItem(LS_KEYS.theme, isDark ? 'dark' : 'light');
+            }
+
+            // Nav handler - scroll to section
+            function navHandler(e) {
+                const target = e.currentTarget.dataset.target;
+                const section = $(`#${target}`);
+                if (section && !section.hidden) {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else {
+                    // If not allowed by role, inform user
+                    openModal('Permission', `<p class="small">Your current role cannot access that section.</p>`);
+                }
+            }
+
+            // Update metrics
+            function updateMetricsForRole(role) {
+                const data = MOCK[role] || MOCK.admin;
+                $('#metric-customers').textContent = (data.metrics?.customers ?? '-').toLocaleString();
+                $('#metric-orders').textContent = (data.metrics?.orders ?? '-').toLocaleString();
+                $('#metric-revenue').textContent = '$' + ((data.metrics?.revenue ?? 0).toLocaleString());
+                $('#metric-deliveries').textContent = (data.metrics?.deliveries ?? '-');
+            }
+
+            // Chart drawing helpers
+            function drawAllChartsForRole(role) {
+                const data = MOCK[role] || MOCK.admin;
+                drawBarChart(document.getElementById('barChart'), data.monthlySales, { barColor: '#3b82f6' });
+                drawLineChart(document.getElementById('lineChart'), data.stats, { lineColor: '#6366f1' });
+                drawGauge(data.monthlySales.reduce((a, b) => a + b, 0) / 1200); // mock percent
+            }
+
+            // Draw Simple Bar Chart on canvas
+            function drawBarChart(canvas, arr = [], opts = {}) {
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                const w = canvas.width;
+                const h = canvas.height;
+                ctx.clearRect(0, 0, w, h);
+                const padding = 20;
+                const max = Math.max(...arr, 1);
+                const barW = (w - padding * 2) / arr.length * 0.7;
+                arr.forEach((v, i) => {
+                    const x = padding + i * ((w - padding * 2) / arr.length) + ((w - padding * 2) / arr.length - barW) / 2;
+                    const barH = (v / max) * (h - padding * 2);
+                    const y = h - padding - barH;
+                    // draw bar
+                    ctx.fillStyle = opts.barColor || '#3b82f6';
+                    // simple gradient
+                    const grad = ctx.createLinearGradient(0, y, 0, h);
+                    grad.addColorStop(0, opts.barColor || '#3b82f6');
+                    grad.addColorStop(1, '#a5b4fc');
+                    ctx.fillStyle = grad;
+                    roundRect(ctx, x, y, barW, barH, 6);
+                    ctx.fill();
+                });
+                // Labels (months short)
+                ctx.fillStyle = '#9aa4b2';
+                ctx.font = '10px system-ui';
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                arr.forEach((v, i) => {
+                    const mx = padding + i * ((w - padding * 2) / arr.length) + ((w - padding * 2) / arr.length) / 2;
+                    ctx.fillText(months[i] || (i + 1), mx - 10, h - 6);
+                });
+            }
+
+            // Draw Simple Line Chart
+            function drawLineChart(canvas, arr = [], opts = {}) {
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                const w = canvas.width;
+                const h = canvas.height;
+                ctx.clearRect(0, 0, w, h);
+                const padding = 30;
+                const max = Math.max(...arr, 1);
+                const stepX = (w - padding * 2) / (arr.length - 1 || 1);
+                // area
+                ctx.beginPath();
+                arr.forEach((v, i) => {
+                    const x = padding + i * stepX;
+                    const y = h - padding - (v / max) * (h - padding * 2);
+                    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+                });
+                ctx.lineTo(w - padding, h - padding);
+                ctx.lineTo(padding, h - padding);
+                ctx.closePath();
+                ctx.fillStyle = 'rgba(99,102,241,0.12)';
+                ctx.fill();
+
+                // stroke line
+                ctx.beginPath();
+                arr.forEach((v, i) => {
+                    const x = padding + i * stepX;
+                    const y = h - padding - (v / max) * (h - padding * 2);
+                    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+                });
+                ctx.strokeStyle = opts.lineColor || '#6366f1';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+
+            function roundRect(ctx, x, y, width, height, radius) {
+                ctx.beginPath();
+                ctx.moveTo(x + radius, y);
+                ctx.arcTo(x + width, y, x + width, y + height, radius);
+                ctx.arcTo(x + width, y + height, x, y + height, radius);
+                ctx.arcTo(x, y + height, x, y, radius);
+                ctx.arcTo(x, y, x + width, y, radius);
+                ctx.closePath();
+            }
+
+            // Gauge (SVG path stroke-dasharray manipulation)
+            function drawGauge(percent) {
+                const pct = Math.max(0, Math.min(1, percent || 0.6));
+                const path = document.getElementById('gauge-fill');
+                const length = path.getTotalLength();
+                path.style.strokeDasharray = `${length * pct} ${length}`;
+                path.style.transition = 'stroke-dasharray 600ms ease';
+                $('#gaugePercent').textContent = Math.round(pct * 100) + '%';
+            }
+
+            // Modal
+            function openModal(title, html) {
+                modalTitle.textContent = title;
+                modalBody.innerHTML = html;
+                modal.setAttribute('aria-hidden', 'false');
+                modal.style.display = 'flex';
+            }
+            function closeModal() {
+                modal.setAttribute('aria-hidden', 'true');
+                setTimeout(() => modal.style.display = 'none', 200);
+            }
+
+            // Keyboard handling for accessibility (Esc to close modals)
+            function handleKeydown(e) {
+                if (e.key === 'Escape') {
+                    if (modal.getAttribute('aria-hidden') === 'false') closeModal();
+                }
+            }
+
+            // Populate customers table
+            function populateCustomers() {
+                const tbody = $('#customersTable tbody');
+                if (!tbody) return;
+                tbody.innerHTML = '';
+                const list = MOCK.vendedor.customers || [];
+                list.forEach(c => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${c.id}</td><td>${c.name}</td><td>${c.email}</td><td>${c.orders}</td>`;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            // Sorting for customers
+            function sortCustomers(e) {
+                const key = e.currentTarget.dataset.key;
+                const arr = MOCK.vendedor.customers;
+                if (!key || !arr) return;
+                arr.sort((a, b) => {
+                    const av = a[key], bv = b[key];
+                    if (typeof av === 'string') return av.localeCompare(bv);
+                    return av - bv;
+                });
+                populateCustomers();
+            }
+
+            // Filtering customers
+            function applyCustomerFilter(e) {
+                const q = e.target.value.toLowerCase();
+                const tbody = $('#customersTable tbody');
+                tbody.innerHTML = '';
+                MOCK.vendedor.customers.filter(c => {
+                    return c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q);
+                }).forEach(c => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${c.id}</td><td>${c.name}</td><td>${c.email}</td><td>${c.orders}</td>`;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            // Populate orders
+            function populateOrders() {
+                const tbody = $('#ordersTable tbody');
+                if (!tbody) return;
+                tbody.innerHTML = '';
+                (MOCK.vendedor.orders || []).forEach(o => {
+                    const tr = document.createElement('tr');
+                    const actions = `<button class="btn" data-action="view" data-id="${o.id}">View</button>
+                       <button class="btn" data-action="status" data-id="${o.id}">Change Status</button>`;
+                    tr.innerHTML = `<td>${o.id}</td><td>${o.customer}</td><td>$${o.amount.toFixed(2)}</td><td>${o.status}</td><td>${actions}</td>`;
+                    tbody.appendChild(tr);
+                });
+                // attach actions
+                tbody.querySelectorAll('button').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const action = e.currentTarget.dataset.action;
+                        const id = e.currentTarget.dataset.id;
+                        const order = MOCK.vendedor.orders.find(x => x.id === id);
+                        if (action === 'view') {
+                            openModal(`Order ${id}`, `<p><strong>Customer:</strong> ${order.customer}</p><p><strong>Amount:</strong> $${order.amount.toFixed(2)}</p><p><strong>Status:</strong> ${order.status}</p>`);
+                        } else if (action === 'status') {
+                            const statuses = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Canceled'];
+                            const options = statuses.map(s => `<option ${s === order.status ? 'selected' : ''}>${s}</option>`).join('');
+                            openModal('Change status', `<p><label>Status <select id="statusSelect">${options}</select></label><p><button id="saveStatus" class="btn">Save</button></p>`);
+                            $('#saveStatus').addEventListener('click', () => {
+                                const newStatus = $('#statusSelect').value;
+                                order.status = newStatus;
+                                populateOrders();
+                                closeModal();
+                            });
+                        }
+                    });
+                });
+            }
+
+            // Order filter
+            function applyOrderFilter(e) {
+                const q = e.target.value.toLowerCase();
+                const tbody = $('#ordersTable tbody');
+                tbody.innerHTML = '';
+                (MOCK.vendedor.orders || []).filter(o => {
+                    return o.id.toLowerCase().includes(q) || o.customer.toLowerCase().includes(q) || o.status.toLowerCase().includes(q);
+                }).forEach(o => {
+                    const tr = document.createElement('tr');
+                    const actions = `<button class="btn" data-action="view" data-id="${o.id}">View</button>
+                       <button class="btn" data-action="status" data-id="${o.id}">Change Status</button>`;
+                    tr.innerHTML = `<td>${o.id}</td><td>${o.customer}</td><td>$${o.amount.toFixed(2)}</td><td>${o.status}</td><td>${actions}</td>`;
+                    tbody.appendChild(tr);
+                });
+                // rebind actions
+                tbody.querySelectorAll('button').forEach(btn => {
+                    btn.addEventListener('click', () => { /* similar to populateOrders bindings */ populateOrders(); });
+                });
+            }
+
+            // Create order modal (mock)
+            function createOrderModal() {
+                openModal('Create Order', `<form id="orderForm">
+      <label>Customer <input id="oCustomer" required></label>
+      <label>Amount <input id="oAmount" type="number" min="0" required></label>
+      <label>Status <select id="oStatus"><option>Pending</option><option>Processing</option></select></label>
+      <p><button class="btn" type="submit">Create</button></p></form>`);
+                $('#orderForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const cust = $('#oCustomer').value || 'Guest';
+                    const amt = parseFloat($('#oAmount').value) || 0;
+                    const status = $('#oStatus').value;
+                    const id = 'A' + (100 + Math.floor(Math.random() * 900));
+                    MOCK.vendedor.orders.push({ id, customer: cust, amount: amt, status });
+                    populateOrders();
+                    closeModal();
+                });
+            }
+
+            // Delivery list population
+            function populateDeliveries() {
+                const list = $('#deliveryList');
+                if (!list) return;
+                list.innerHTML = '';
+                (MOCK.delivery.deliveries || []).forEach(d => {
+                    const li = document.createElement('li');
+                    li.className = 'delivery-item';
+                    const meta = document.createElement('div');
+                    meta.className = 'meta';
+                    meta.innerHTML = `<strong>${d.id}</strong><div>${d.address}</div><div class="small">ETA ${d.eta}</div>`;
+                    const actions = document.createElement('div');
+                    actions.innerHTML = `<span class="small">${d.distance} km</span> <button class="btn" data-id="${d.id}" data-action="track">Track</button>`;
+                    li.appendChild(meta);
+                    li.appendChild(actions);
+                    list.appendChild(li);
+                });
+                // bind track buttons
+                list.querySelectorAll('button').forEach(b => b.addEventListener('click', (e) => {
+                    const id = e.currentTarget.dataset.id;
+                    const d = MOCK.delivery.deliveries.find(x => x.id === id);
+                    openModal(`Delivery ${id}`, `<p><strong>Address:</strong> ${d.address}</p><p><strong>Status:</strong> ${d.status}</p><p class="small">Location: ${d.lat}, ${d.lon}</p>`);
+                }));
+            }
+
+            // Mock route optimize: sort by distance ascending and animate
+            function optimizeRoutes() {
+                MOCK.delivery.deliveries.sort((a, b) => a.distance - b.distance);
+                // quick animation: flash list
+                const list = $('#deliveryList');
+                list.style.transition = 'transform 420ms ease';
+                list.style.transform = 'translateX(-10px)';
+                setTimeout(() => { list.style.transform = 'translateX(0)'; populateDeliveries(); }, 200);
+            }
+
+            // Locate all (mock): open modal with approximate locations
+            function locateAll() {
+                const mapHtml = MOCK.delivery.deliveries.map(d => `<li>${d.id}: ${d.lat}, ${d.lon} — ${d.address}</li>`).join('');
+                openModal('All Locations', `<ul>${mapHtml}</ul>`);
+            }
+
+            // Initialize on DOM ready
+            document.addEventListener('DOMContentLoaded', init);
+
+            // Expose a debug function
+            window.__MultiDash = { MOCK, setRole };
+        })();
+    </script>
+</body>
+
+</html>

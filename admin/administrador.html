@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Dashboard — Pedidos</title>
+    <link rel="stylesheet" href="assets/css/styles-pruducts.css">
+    <link rel="stylesheet" href="assets/css/admin-products.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/order-management.css">
+</head>
+
+<body>
+    <!-- Sidebar toggle (checkbox hack) -->
+    <input id="nav-toggle" type="checkbox" class="nav-toggle" aria-hidden="true">
+
+    <!-- Top bar -->
+    <header class="topbar">
+        <div class="top-left">
+            <label for="nav-toggle" class="hamburger" aria-hidden="true">
+                <span class="hamburger-box"><span class="hamburger-inner"></span></span>
+            </label>
+            <a class="brand" href="./" aria-label="Dashboard">
+                <span class="logo" aria-hidden="true">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <rect x="3" y="3" width="6" height="18" rx="1.5" fill="#2b6ef6"></rect>
+                        <rect x="10.5" y="9" width="6" height="12" rx="1.5" fill="#60c3ff"></rect>
+                        <rect x="18" y="15" width="3" height="6" rx="1.5" fill="#9bdc8e"></rect>
+                    </svg>
+                </span>
+                <span class="brand-text">Varius</span>
+            </a>
+        </div>
+
+        <div class="top-search">
+            <label for="q" class="sr-only">Buscar</label>
+            <input id="q" type="search" placeholder="Search orders..." aria-label="Buscar" />
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Navegación principal">
+        <nav>
+            <ul class="nav-list">
+                <li class="nav-item active">
+                    <a href="./" class="nav-link">
+                        <span class="nav-icon" aria-hidden="true">🏠</span>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+
+                <!----
+                <li class="nav-item">
+                    <details class="nav-dropdown">
+                        <summary class="nav-link summary-link">
+                            <span class="nav-icon" aria-hidden="true">📊</span>
+                            <span class="nav-text">Analytics</span>
+                        </summary>
+                        <ul class="sub-list">
+                            <li><a href="#">Visión general</a></li>
+                            <li><a href="#">Tráfico</a></li>
+                            <li><a href="#">Conversiones</a></li>
+                        </ul>
+                    </details>
+                </li>
+                ---->
+
+                <!-- Customers -->
+                <li class="nav-item">
+                    <a href="usuarios.html" class="nav-link">
+                        <span class="nav-icon" aria-hidden="true">👥</span>
+                        <span class="nav-text">Usuarios</span>
+                    </a>
+                </li>
+
+                <!-- Reports -->
+                <li class="nav-item">
+                    <a href="./product.html" class="nav-link">
+                        <span class="nav-icon" aria-hidden="true">📦</span>
+                        <span class="nav-text">Productos</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="orders.html" class="nav-link">
+                        <span class="nav-icon" aria-hidden="true">📋</span>
+                        <span class="nav-text">Pedidos</span>
+                    </a>
+                </li>
+
+                
+            </ul>
+
+            <!-- bottom user block -->
+            <div class="sidebar-user">
+                <div class="sidebar-user-info">
+                    <span class="avatar circle"></span>
+                    <div class="user-meta">
+                        <div class="name"></div>
+                        <div class="email"></div>
+                    </div>
+                </div>
+                <a href="#" class="logout-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-power" viewBox="0 0 16 16">
+                        <path d="M7.5 1v7h1V1z" />
+                        <path
+                            d="M3 8.812a5 5 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812" />
+                    </svg>
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+
+        <!-- KPI cards (kept as-is) -->
+        <section class="kpis" aria-label="Indicadores rápidos">
+            <article class="card kpi-card">
+                <div class="kpi-info">
+                    <div class="kpi-title">Pedidos hoy</div>
+                    <div class="kpi-value" id="kpi-orders-today">—</div>
+                    <div class="kpi-meta muted">Comparado con ayer</div>
+                </div>
+                <div class="kpi-icon" aria-hidden="true">
+                    <div class="icon-square">📦</div>
+                </div>
+            </article>
+            <article class="card kpi-card">
+                <div class="kpi-info">
+                    <div class="kpi-title">Ventas</div>
+                    <div class="kpi-value">$<span id="kpi-sales">—</span></div>
+                    <div class="kpi-meta muted">Total diario</div>
+                </div>
+                <div class="kpi-icon" aria-hidden="true">
+                    <div class="icon-square">💲</div>
+                </div>
+            </article>
+            <article class="card kpi-card">
+                <div class="kpi-info">
+                    <div class="kpi-title">Stock bajo</div>
+                    <div class="kpi-value">3</div>
+                    <div class="kpi-meta muted">Productos con bajo stock</div>
+                </div>
+                <div class="kpi-icon" aria-hidden="true">
+                    <div class="icon-square">⚠️</div>
+                </div>
+            </article>
+            <article class="card kpi-card">
+                <div class="kpi-info">
+                    <div class="kpi-title">Caja</div>
+                    <div class="kpi-value">Abierta</div>
+                    <div class="kpi-meta muted">Estado actual</div>
+                </div>
+                <div class="kpi-icon" aria-hidden="true">
+                    <div class="icon-square">🏧</div>
+                </div>
+            </article>
+        </section>
+
+        <!-- Quick actions -->
+        <section class="table-wrap card quick-actions-card" aria-label="Acciones rápidas">
+            <div class="table-header" style="padding: 18px 12px;">
+                <h3>Acciones Rápidas</h3>
+            </div>
+            <div class="quick-actions" style="padding: 12px;">
+                <button class="action-btn action-primary" data-action="crear-producto">
+                    <span class="action-icon">＋</span>
+                    <span>Crear producto</span>
+                </button>
+
+                <button class="action-btn" data-action="gestionar-usuarios"
+                    onclick="window.location.href='usuarios.html'">
+                    <span class="action-icon">👥</span>
+                    <span>Gestionar usuarios</span>
+                </button>
+
+                <button class="action-btn" data-action="inventario" onclick="window.location.href='product.html'">
+                    <span class="action-icon">🏬</span>
+                    <span>Inventario</span>
+                </button>
+
+                <button class="action-btn" data-action="cierre-caja">
+                    <span class="action-icon">🧾</span>
+                    <span>Cierre de caja</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Filters -->
+        <section class="filters-card card" aria-label="Filtros de pedidos" style="margin-top:16px;">
+            <div class="table-header" style="padding: 0 6px 12px;">
+                <h3>Filtros</h3>
+            </div>
+
+            <form class="filters-grid" id="ordersFilters" style="gap:12px; align-items:end;">
+                <div class="filter-field">
+                    <label for="fechaInicio">Fecha inicio</label>
+                    <input id="fechaInicio" name="fechaInicio" type="date" />
+                </div>
+
+                <div class="filter-field">
+                    <label for="fechaFin">Fecha fin</label>
+                    <input id="fechaFin" name="fechaFin" type="date" />
+                </div>
+
+                <div class="filter-field">
+                    <label for="productoFiltro">Producto</label>
+                    <select id="productoFiltro" name="productoFiltro">
+                        <option value="">Todos</option>
+                        <option value="zapatillas">Zapatillas Urbanas</option>
+                        <option value="auriculares">Auriculares</option>
+                    </select>
+                </div>
+
+                <div class="filter-field">
+                    <label for="estadoPago">Estado de pago</label>
+                    <select id="estadoPago" name="estadoPago">
+                        <option value="">Todos</option>
+                        <option value="pagado">Pagado</option>
+                        <option value="pendiente">Pendiente</option>
+                    </select>
+                </div>
+
+                <div class="filter-field">
+                    <label for="estadoEnvio">Estado de envío</label>
+                    <select id="estadoEnvio" name="estadoEnvio">
+                        <option value="">Todos</option>
+                        <option value="pendiente">Pendiente</option>
+                        <option value="enviado">Enviado</option>
+                        <option value="entregado">Entregado</option>
+                    </select>
+                </div>
+
+                <div class="filter-field">
+                    <label for="motorizadoFiltro">Motorizado</label>
+                    <select id="motorizadoFiltro" name="motorizadoFiltro">
+                        <option value="">Todos</option>
+                        <option value="sin-asignar">Sin asignar</option>
+                        <!-- dynamic motorizados optionally -->
+                    </select>
+                </div>
+
+                <div style="grid-column: 1 / -1; display:flex; justify-content:flex-start; margin-top:4px;">
+                    <button type="button" class="btn-apply" id="applyFilters">Aplicar filtros</button>
+                    <button type="button" class="btn-secondary" id="resetFilters"
+                        style="margin-left:8px;">Limpiar</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Orders table -->
+        <section class="table-wrap card" style="margin-top:16px;">
+            <div class="table-header">
+                <h3>Pedidos</h3>
+                <a class="view-all" href="#" id="downloadCsv">Exportar CSV</a>
+            </div>
+            <div class="table-scroll">
+                <table id="ordersTable" class="products-table orders-table" role="table" aria-label="Tabla de pedidos">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>CLIENTE</th>
+                            <th>PRODUCTO</th>
+                            <th>FECHA</th>
+                            <th>TOTAL</th>
+                            <th>ESTADO PAGO</th>
+                            <th>ESTADO ENVÍO</th>
+                            <th>VENDEDOR</th>
+                            <th>MOTORIZADO</th>
+                            <th>ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTbody"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Assign Modal: single modal with two stacked tables (vendedores arriba, motorizados abajo) -->
+    <div id="assignModal" class="modal hidden" aria-hidden="true" role="dialog" aria-modal="true"
+        aria-labelledby="assignModalTitle">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h2 id="assignModalTitle">Asignar personal al pedido</h2>
+                <button class="close-btn" id="assignModalClose" aria-label="Cerrar">×</button>
+            </div>
+
+            <div class="modal-body" style="padding:12px 0;">
+                <!-- Table: Vendedores (arriba) -->
+                <div>
+                    <h3 style="margin:0 0 8px 0;">Vendedores activos y online</h3>
+                    <table class="table-card small" id="vendedoresList">
+                        <thead>
+                            <tr>
+                                <th style="width:48px;"></th>
+                                <th>Nombre</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <hr style="margin:12px 0;" />
+
+                <!-- Table: Motorizados (abajo) -->
+                <div>
+                    <h3 style="margin:0 0 8px 0;">Motorizados activos y online</h3>
+                    <table class="table-card small" id="motorizadosList">
+                        <thead>
+                            <tr>
+                                <th style="width:48px;"></th>
+                                <th>Nombre</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:8px; padding-top:12px;">
+                <button class="btn-secondary" id="assignCancel">Cancelar</button>
+                <button class="btn-primary" id="assignConfirm">Asignarlos</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View order modal (unchanged) -->
+    <div id="viewModal" class="modal hidden" aria-hidden="true" role="dialog" aria-modal="true"
+        aria-labelledby="viewModalTitle">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h2 id="viewModalTitle">Estado del pedido</h2>
+                <button class="close-btn" id="viewModalClose" aria-label="Cerrar">×</button>
+            </div>
+            <div class="modal-body" id="viewModalBody" style="padding:12px 0;">
+                <div id="orderTimeline"></div>
+            </div>
+            <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:8px; padding-top:12px;">
+                <button class="btn-secondary" id="viewCloseBtn">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast container -->
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+    <script type="module" src="../assets/js/sidebar-user.js"></script>
+
+    <script type="module">
+        import { logout } from '../assets/js/auth.js';
+        const logoutBtn = document.getElementById('logout');
+        if (logoutBtn) logoutBtn.addEventListener('click', logout);
+
+        // small UX: focus search
+        const q = document.getElementById('q');
+        if (q) q.addEventListener('input', (e) => {
+            // we'll trigger table filter through Orders module (orders.js listens to this event)
+            document.dispatchEvent(new CustomEvent('orders:search', { detail: e.target.value }));
+        });
+    </script>
+
+    <!-- Orders manager (module) -->
+    <script type="module" src="../assets/js/orders.js"></script>
+    <script type="module" src="../assets/js/kpis.js"></script>
+    <script type="module" src="../assets/js/presence.js"></script>
+</body>
+
+</html>

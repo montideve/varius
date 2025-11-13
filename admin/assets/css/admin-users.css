@@ -1,0 +1,73 @@
+/* Estilos específicos para la página de usuarios (complementario a assets/css/styles.css) */
+/* Reutiliza variables y estilos globales; aquí ajustes locales para table de usuarios */
+
+:root {
+  --muted: #6b7280;
+  --border: #e6e8eb;
+  --btn-bg: #111827;
+  --badge-bg: #f3f4f6;
+}
+
+.table-controls {
+  margin: 12px 0;
+}
+
+table#usersTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+thead th {
+  background: #fafafa;
+  padding: 14px 18px;
+  text-align: left;
+  color: var(--muted);
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+  border-radius: 6px;
+}
+tbody td {
+  padding: 16px 18px;
+  border-bottom: 1px solid #f1f3f5;
+  font-size: 14px;
+  color: #111827;
+}
+.badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: var(--badge-bg);
+  color: var(--muted);
+  font-size: 12px;
+}
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  cursor: pointer;
+  color: #374151;
+}
+@media (max-width: 900px) {
+  table#usersTable {
+    min-width: 0;
+  }
+  thead th:nth-child(4),
+  tbody td:nth-child(4) {
+    display: none;
+  }
+}
+.input-alert {
+  color: #b71c1c;
+  font-size: 13px;
+  min-height: 18px;
+}

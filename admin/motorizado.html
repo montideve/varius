@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Motorizado - Panel</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Barra lateral">
+      <div class="brand">
+        <div class="logo">M</div>
+        <div class="app-name">FinSet</div>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Navegación">
+        <a href="#tareas" class="nav-item"><span>📦</span><span>Tareas</span></a>
+        <a href="#mapa" class="nav-item"><span>🗺️</span><span>Mapa</span></a>
+        <a href="#historial" class="nav-item"><span>📜</span><span>Historial</span></a>
+        <a href="#ajustes" class="nav-item"><span>⚙️</span><span>Ajustes</span></a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="btn btn-ghost">Ayuda</button>
+        <button class="logout-btn">Cerrar sesión</button>
+      </div>
+    </aside>
+
+    <main class="canvas">
+      <header class="header">
+        <div class="header-left">
+          <button id="menuToggle" class="menu-toggle" aria-label="Abrir menú">☰</button>
+          <div>
+            <div class="header-title">Dashboard - Motorizado</div>
+            <div class="small">Resumen de entregas y rutas</div>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <div class="search">
+            <svg width="16" height="16" viewBox="0 0 24 24">
+              <path fill="#6b7280" d="M21 21l-4.35-4.35" />
+            </svg>
+            <input type="search" placeholder="Buscar pedido, dirección..." aria-label="Buscar">
+          </div>
+
+          <button class="icon-btn" title="Notificaciones">🔔</button>
+
+          <div class="avatar" title="Perfil">
+            <img src="https://i.pravatar.cc/100?u=motorizado" alt="avatar">
+          </div>
+        </div>
+      </header>
+
+      <section class="metrics-grid" aria-label="Indicadores principales" style="margin-top:6px;">
+        <div class="metric">
+          <div class="label">Entregas hoy</div>
+          <div class="value">24</div>
+          <div class="meta"><span class="pulse-up">+12%</span><span class="small">Comparado con ayer</span></div>
+        </div>
+
+        <div class="metric">
+          <div class="label">En ruta</div>
+          <div class="value">4</div>
+          <div class="meta"><span class="small">Tiempo promedio: 18 min</span></div>
+        </div>
+
+        <div class="metric">
+          <div class="label">Ganancias</div>
+          <div class="value">$9,120</div>
+          <div class="meta"><span class="small">Hoy • <strong>$9,120</strong></span></div>
+        </div>
+      </section>
+
+      <section class="content-grid" style="margin-top:12px;">
+        <div>
+          <div class="chart-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div style="font-weight:800">Resumen de entregas</div>
+              <div class="small">Últimos 30 días</div>
+            </div>
+            <div
+              style="height:220px;margin-top:12px;border-radius:8px;background:linear-gradient(180deg,#faf7ff,#fff);display:flex;align-items:center;justify-content:center;color:var(--muted);">
+              Gráfica (placeholder)</div>
+
+            <div
+              style="margin-top:12px; display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px;">
+              <div class="metric" style="padding:10px;">
+                <div class="label small">Promedio tiempo</div>
+                <div class="value" style="font-size:18px">$18 min</div>
+              </div>
+              <div class="metric" style="padding:10px;">
+                <div class="label small">Entregas completadas</div>
+                <div class="value" style="font-size:18px">20</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card" style="margin-top:12px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div style="font-weight:800">Comparativa mensual</div>
+              <div class="small">This year</div>
+            </div>
+            <div
+              style="height:140px;margin-top:12px;border-radius:8px;background:linear-gradient(180deg,#fff7f2,#fff);display:flex;align-items:center;justify-content:center;color:var(--muted);">
+              Barras (placeholder)</div>
+          </div>
+        </div>
+
+        <aside class="stats">
+          <div class="chart-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div style="font-weight:800">Estadísticas</div>
+              <div class="small">Detalles</div>
+            </div>
+
+            <div class="stat-visual" style="margin-top:12px;">Gráfico circular</div>
+            <div style="margin-top:8px;color:var(--muted);font-size:13px;">
+              <div>Comida y restaurantes <span class="small">40%</span></div>
+              <div>Otros <span class="small">60%</span></div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div style="font-weight:800">Estado jornada</div>
+            <div style="margin-top:8px;color:var(--muted)">Pendientes: <strong>3</strong></div>
+            <div style="margin-top:12px"><button class="btn btn-primary" style="width:100%;">Comenzar jornada</button>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section id="tareas" class="page-content hidden" style="margin-top:12px;">
+        <!-- detalle listado de tareas: cuando se seleccione en la sidebar se mostrará -->
+      </section>
+      <section id="mapa" class="page-content hidden"></section>
+      <section id="historial" class="page-content hidden"></section>
+      <section id="ajustes" class="page-content hidden"></section>
+    </main>
+  </div>
+
+  <script type="module">
+    import { initDashboard } from './assets/js/dashboard.js';
+    initDashboard();
+
+    // example: fill avatar name from localStorage if present
+    // (actual integration: obtener nombre desde auth)
+  </script>
+</body>
+
+</html>

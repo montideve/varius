@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Dashboard — Productos</title>
+    <link rel="stylesheet" href="assets/css/styles-pruducts.css">
+    <link rel="stylesheet" href="assets/css/admin-products.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <!-- Sidebar toggle (checkbox hack) -->
+    <input id="nav-toggle" type="checkbox" class="nav-toggle" aria-hidden="true">
+
+    <!-- Top bar -->
+    <header class="topbar">
+        <div class="top-left">
+            <label for="nav-toggle" class="hamburger" aria-hidden="true">
+                <span class="hamburger-box"><span class="hamburger-inner"></span></span>
+            </label>
+            <a class="brand" href="./" aria-label="Dashboard">
+                <span class="logo" aria-hidden="true">
+                    <!-- simple logo svg -->
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <rect x="3" y="3" width="6" height="18" rx="1.5" fill="#2b6ef6"></rect>
+                        <rect x="10.5" y="9" width="6" height="12" rx="1.5" fill="#60c3ff"></rect>
+                        <rect x="18" y="15" width="3" height="6" rx="1.5" fill="#9bdc8e"></rect>
+                    </svg>
+                </span>
+                <span class="brand-text">Varius</span>
+            </a>
+        </div>
+
+        <div class="top-search">
+            <label for="q" class="sr-only">Buscar</label>
+            <input id="q" type="search" placeholder="Search..." aria-label="Buscar" />
+        </div>
+
+
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Navegación principal">
+        <nav>
+            <ul class="nav-list">
+                <li class="nav-item active">
+                    <a href="./" class="nav-link">
+                        <span class="nav-icon" aria-hidden="true">🏠</span>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+
+                <!-- Customers -->
+                <li class="nav-item">
+                    <a href="usuarios.html" class="nav-link">
+                        <span class="nav-icon" aria-hidden="true">👥</span>
+                        <span class="nav-text">Usuarios</span>
+                    </a>
+                </li>
+
+                <!-- Reports -->
+                <li class="nav-item">
+                    <a href="product.html" class="nav-link">
+                        <span class="nav-icon" aria-hidden="true">📦</span>
+                        <span class="nav-text">Productos</span>
+                    </a>
+                </li>
+
+                <!-- Notifications -->
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon" aria-hidden="true">🔔</span>
+                        <span class="nav-text">Notifications</span>
+                    </a>
+                </li>
+
+                <!-- Settings with dropdown -->
+                <li class="nav-item">
+                    <details class="nav-dropdown">
+                        <summary class="nav-link summary-link">
+                            <span class="nav-icon" aria-hidden="true">⚙️</span>
+                            <span class="nav-text">Settings</span>
+                        </summary>
+                        <ul class="sub-list">
+                            <li><a href="#">Cuenta</a></li>
+                            <li><a href="#">Seguridad</a></li>
+                            <li><a href="#">Integraciones</a></li>
+                        </ul>
+                    </details>
+                </li>
+            </ul>
+
+            <!-- bottom user block -->
+            <div class="sidebar-user">
+                <div class="sidebar-user-info">
+                    <span class="avatar circle"></span>
+                    <div class="user-meta">
+                        <div class="name"></div>
+                        <div class="email"></div>
+                    </div>
+                </div>
+                <a href="#" class="logout-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-power" viewBox="0 0 16 16">
+                        <path d="M7.5 1v7h1V1z" />
+                        <path
+                            d="M3 8.812a5 5 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812" />
+                    </svg>
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+
+        <!-- KPI cards (actualizado) -->
+        <section class="kpis" aria-label="Indicadores rápidos">
+            <article class="card kpi-card">
+                <div class="kpi-info">
+                    <div class="kpi-title">Pedidos hoy</div>
+                    <div class="kpi-value">12</div>
+                    <div class="kpi-meta muted">Comparado con ayer</div>
+                </div>
+                <div class="kpi-icon" aria-hidden="true">
+                    <div class="icon-square">📦</div>
+                </div>
+            </article>
+
+            <article class="card kpi-card">
+                <div class="kpi-info">
+                    <div class="kpi-title">Ventas</div>
+                    <div class="kpi-value">$359.880</div>
+                    <div class="kpi-meta muted">Total diario</div>
+                </div>
+                <div class="kpi-icon" aria-hidden="true">
+                    <div class="icon-square">💲</div>
+                </div>
+            </article>
+
+            <article class="card kpi-card">
+                <div class="kpi-info">
+                    <div class="kpi-title">Stock bajo</div>
+                    <div class="kpi-value">3</div>
+                    <div class="kpi-meta muted">Productos con bajo stock</div>
+                </div>
+                <div class="kpi-icon" aria-hidden="true">
+                    <div class="icon-square">⚠️</div>
+                </div>
+            </article>
+
+            <article class="card kpi-card">
+                <div class="kpi-info">
+                    <div class="kpi-title">Caja</div>
+                    <div class="kpi-value">Abierta</div>
+                    <div class="kpi-meta muted">Estado actual</div>
+                </div>
+                <div class="kpi-icon" aria-hidden="true">
+                    <div class="icon-square">🏧</div>
+                </div>
+            </article>
+        </section>
+
+        <!-- Quick actions -->
+        <section class="table-wrap card quick-actions-card" aria-label="Acciones rápidas">
+            <div class="table-header" style="padding: 18px 12px;">
+                <h3>Acciones Rápidas</h3>
+            </div>
+            <div class="quick-actions" style="padding: 12px;">
+                <button class="action-btn action-primary" data-action="crear-producto">
+                    <span class="action-icon">＋</span>
+                    <span>Crear producto</span>
+                </button>
+
+                <button class="action-btn" data-action="gestionar-usuarios" onclick="window.location.href='usuarios.html'">
+                    <span class="action-icon">👥</span>
+                    <span>Gestionar usuarios</span>
+                </button>
+
+                <button class="action-btn" data-action="inventario">
+                    <span class="action-icon">🏬</span>
+                    <span>Inventario</span>
+                </button>
+
+                <button class="action-btn" data-action="cierre-caja">
+                    <span class="action-icon">🧾</span>
+                    <span>Cierre de caja</span>
+                </button>
+            </div>
+        </section>
+        <br>
+        <section class="table-wrap card">
+            <div class="table-header">
+                <h3>Recent Transactions</h3>
+                <a class="view-all" href="#">Ver Todo</a>
+            </div>
+            <div class="table-scroll">
+                <table class="products-table" role="table" aria-label="Tabla de productos">
+                    <thead>
+                        <tr>
+                            <th>Imagen</th>
+                            <th>Nombre</th>
+                            <th>Precio Total</th>
+                            <th>Oferta</th>
+                            <th>Descuento</th>
+                            <th>Vendedor</th>
+                            <th>Motorizado</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="thumb">Img</div>
+                            </td>
+                            <td>
+                                <div class="product-name">
+                                    Cinta led manguera
+                                    <br>
+                                    <span class="muted">Electrónica</span>
+                                </div>
+                            </td>
+                            <td>$12,000</td>
+                            <td><span class="badge">NO</span></td>
+                            <td>15%</td>
+                            <td>$10,200</td>
+                            <td>120</td>
+                            <td><span class="badge-state">Activo</span></td>
+                            <td class="actions"><button class="icon-btn">✎</button><button class="icon-btn">🗑</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="thumb">Img</div>
+                            </td>
+                            <td>
+                                <div class="product-name">Auriculares<br><span class="muted">SKU: AUD-013</span></div>
+                            </td>
+                            <td>$45,000</td>
+                            <td><span class="badge">No</span></td>
+                            <td>0%</td>
+                            <td>—</td>
+                            <td>35</td>
+                            <td><span class="badge-state">Inactivo</span></td>
+                            <td class="actions"><button class="icon-btn">✎</button><button class="icon-btn">🗑</button>
+                            </td>
+                        </tr>
+                        <!-- más filas... -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="../assets/js/sidebar-user.js"></script>
+    <script type="module">
+        import { logout } from '../assets/js/auth.js';
+        const logoutBtn = document.getElementById('logout');
+        if (logoutBtn) logoutBtn.addEventListener('click', logout);
+
+        // Ejemplos de uso para botones de acciones rápidas
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const action = btn.dataset.action;
+                // añade tu lógica aquí o reemplace con router/modal
+                console.log('Acción rápida clic: ', action);
+                // ejemplo: if(action === 'crear-producto') openCreateProductModal();
+            });
+        });
+
+        // Los handlers siguientes estaban en tu original, los dejo preparados (comprueba ids)
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        function setSidebarOpen(open) {
+            if (!sidebar || !overlay) return;
+            if (open) {
+                sidebar.classList.add('open'); overlay.classList.add('show'); overlay.setAttribute('aria-hidden', 'false');
+            } else {
+                sidebar.classList.remove('open'); overlay.classList.remove('show'); overlay.setAttribute('aria-hidden', 'true');
+            }
+        }
+        if (menuToggle) menuToggle.addEventListener('click', () => setSidebarOpen(true));
+        if (overlay) overlay.addEventListener('click', () => setSidebarOpen(false));
+
+        const createUserBtn = document.getElementById('createUserBtn');
+        if (createUserBtn) createUserBtn.addEventListener('click', () => {
+            alert('Abrir modal de creación de usuario (demo).');
+        });
+    </script>
+</body>
+
+</html>

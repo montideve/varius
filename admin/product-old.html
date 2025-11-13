@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Gestión de Productos - Admin</title>
+    <link rel="stylesheet" href="assets/css/styles-pruducts.css">
+    <link rel="stylesheet" href="assets/css/admin-products.css">
+</head>
+
+<body>
+    <!-- Nota: Este archivo debe estar en /admin/administrador.html -->
+    <!-- auth-guard.js se encarga de redirigir si no hay sesión o no es admin -->
+    <script type="module" src="../assets/js/auth-guard.js"></script>
+
+    <header class="page-header">
+        <h1>Gestión de Productos</h1>
+        <button id="openAddBtn" class="btn-add">
+            <span class="plus">+</span> Añadir producto
+        </button>
+    </header>
+
+    <main class="container">
+        <section class="filters-card">
+            <div class="search-row">
+                <div class="search">
+                    <svg class="icon" viewBox="0 0 24 24" width="18" height="18">
+                        <path fill="currentColor"
+                            d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16a6.471 6.471 0 004.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zM10 15a5 5 0 110-10 5 5 0 010 10z">
+                        </path>
+                    </svg>
+                    <input id="searchInput" type="text" placeholder="Buscar por nombre..." />
+                </div>
+
+                <select id="stateFilter" class="filter-select">
+                    <option value="">Todos los estados</option>
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
+                </select>
+
+                <select id="offerFilter" class="filter-select">
+                    <option value="">Todas las ofertas</option>
+                    <option value="en_oferta">En oferta</option>
+                    <option value="no_oferta">No</option>
+                </select>
+            </div>
+        </section>
+
+        <section class="table-card">
+            <table id="productsTable" aria-live="polite" role="table">
+                <thead>
+                    <tr>
+                        <th>Imagen</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Oferta</th>
+                        <th>Descuento</th>
+                        <th>Precio Oferta</th>
+                        <th>Stock</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="productsBody">
+                    <!-- Filas renderizadas por JS -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- Modal -->
+    <div id="productModal" class="modal hidden" aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h2 id="modalTitle">Agregar Producto</h2>
+                <button id="closeModal" class="close-btn" aria-label="Cerrar">&times;</button>
+            </header>
+
+            <form id="productForm" class="modal-form" novalidate>
+                <input type="hidden" id="productId" />
+                <div class="form-row">
+                    <label>Nombre <span class="required">*</span></label>
+                    <input id="name" type="text" required />
+                </div>
+
+                <div class="form-row">
+                    <label>Descripción</label>
+                    <textarea id="description" rows="3"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <label>Precio (CLP) <span class="required">*</span></label>
+                    <input id="price" type="number" min="0" required />
+                </div>
+
+                <div class="form-row inline">
+                    <div>
+                        <label>Categoría <span class="required">*</span></label>
+                        <select id="category" required>
+                            <option value="">Seleccionar categoría</option>
+                            <option>Ropa</option>
+                            <option>Electrónica</option>
+                            <option>Hogar</option>
+                            <option>Accesorios</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Estado</label>
+                        <select id="status">
+                            <option>Activo</option>
+                            <option>Inactivo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row inline">
+                    <label class="checkbox-row">
+                        <input id="onOffer" type="checkbox" />
+                        <span>En oferta</span>
+                    </label>
+
+                    <div>
+                        <label>Descuento (%)</label>
+                        <input id="discount" type="number" min="0" max="100" value="0" />
+                    </div>
+
+                    <div>
+                        <label>Stock</label>
+                        <input id="stock" type="number" min="0" value="0" />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label>Imagen</label>
+                    <input id="imageFile" type="file" accept="image/*" />
+                </div>
+
+                <div class="form-row">
+                    <label>SKU <small>(generado automáticamente según categoría)</small></label>
+                    <input id="sku" type="text" readonly placeholder="Se generará al seleccionar categoría" />
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Guardar</button>
+                    <button type="button" id="cancelBtn" class="btn-secondary">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+    <script type="module" src="../assets/js/product-admin.js"></script>
+</body>
+
+</html>
