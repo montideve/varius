@@ -6,5 +6,6 @@ export const firebaseConfig = {
     storageBucket: "varius-7de76.firebasestorage.app",
     messagingSenderId: "618912356955",
     appId: "1:618912356955:web:1e57c35d63ba39c2ea7d7e",
-    measurementId: "G-TVJC9EKN6R"
+    measurementId: "G-TVJC9EKN6R",
+    databaseURL: "https://varius-7de76-default-rtdb.firebaseio.com"
 };

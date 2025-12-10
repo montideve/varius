@@ -1,10 +1,3 @@
-/**
- * Admin auth utilities used by client admin scripts
- * - verifyAdminOnClient: checks current user's role in /users doc
- * - getAdminIdToken: returns currentUser.getIdToken(true) (fresh token)
- *
- * This keeps the same initialization style as your auth.js (Firebase v12).
- */
 import { firebaseConfig } from './firebase-config.js';
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";

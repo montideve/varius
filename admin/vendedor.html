@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="assets/css/admin-products.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/order-management.css">
+  <link rel="stylesheet" href="../assets/css/presence.css">
 </head>
 
 <body>
@@ -22,20 +23,17 @@
         <span class="hamburger-box"><span class="hamburger-inner"></span></span>
       </label>
       <a class="brand" href="./" aria-label="Dashboard">
-        <span class="logo" aria-hidden="true">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <rect x="3" y="3" width="6" height="18" rx="1.5" fill="#2b6ef6"></rect>
-            <rect x="10.5" y="9" width="6" height="12" rx="1.5" fill="#60c3ff"></rect>
-            <rect x="18" y="15" width="3" height="6" rx="1.5" fill="#9bdc8e"></rect>
-          </svg>
-        </span>
-        <span class="brand-text">Varius</span>
+        <img src="assets/img/logo.png" alt="Varius" width="14%">
+
+        <span class="brand-text">VARIUS</span>
       </a>
     </div>
 
     <div class="top-search">
       <label for="q" class="sr-only">Buscar</label>
       <input id="q" type="search" placeholder="Search orders..." aria-label="Buscar" />
+      <!-- presence indicator is injected via presence.css + sidebar-user.js -->
+      <span class="presence-indicator offline" id="presenceIndicator" aria-hidden="true"></span>
     </div>
   </header>
 
@@ -70,6 +68,12 @@
             <span class="nav-text">Pedidos</span>
           </a>
         </li>
+        <li class="nav-item">
+          <a href="cxc.html" class="nav-link">
+            <span class="nav-icon" aria-hidden="true">💰</span>
+            <span class="nav-text">CxC</span>
+          </a>
+        </li>
       </ul>
 
       <!-- bottom user block (sidebar-user.js rellenará nombre y rol) -->
@@ -96,7 +100,8 @@
   <main class="main">
 
     <section class="kpis" aria-label="Indicadores rápidos">
-      <article class="card kpi-card">
+      <article class="card kpi-card" id="kpi-card-orders" data-kpi="orders-today" tabindex="0" role="button"
+        aria-pressed="false">
         <div class="kpi-info">
           <div class="kpi-title">Pedidos hoy (tuyos)</div>
           <div class="kpi-value" id="kpi-orders-today">—</div>
@@ -106,7 +111,8 @@
           <div class="icon-square">📦</div>
         </div>
       </article>
-      <article class="card kpi-card">
+      <article class="card kpi-card" id="kpi-card-sales" data-kpi="sales-today" tabindex="0" role="button"
+        aria-pressed="false">
         <div class="kpi-info">
           <div class="kpi-title">Ventas hoy (tuyas)</div>
           <div class="kpi-value">$<span id="kpi-sales">—</span></div>
@@ -118,7 +124,8 @@
       </article>
 
       <!-- Mantengo las otras tarjetas por apariencia; pueden mostrarse o esconderse según prefieras -->
-      <article class="card kpi-card">
+      <article class="card kpi-card" id="kpi-card-assigned" data-kpi="assigned" tabindex="0" role="button"
+        aria-pressed="false">
         <div class="kpi-info">
           <div class="kpi-title">Pedidos asignados</div>
           <div class="kpi-value" id="kpi-assigned">—</div>
@@ -146,22 +153,13 @@
         <h3>Acciones Rápidas</h3>
       </div>
       <div class="quick-actions" style="padding: 12px;">
-        <button class="action-btn action-primary" data-action="crear-producto">
-          <span class="action-icon">＋</span>
-          <span>Crear producto</span>
-        </button>
-
-        <button class="action-btn" data-action="gestionar-usuarios" onclick="window.location.href='usuarios.html'">
-          <span class="action-icon">👥</span>
-          <span>Gestionar usuarios</span>
-        </button>
 
         <button class="action-btn" data-action="inventario" onclick="window.location.href='product.html'">
           <span class="action-icon">🏬</span>
           <span>Inventario</span>
         </button>
 
-        <button class="action-btn" data-action="cierre-caja">
+        <button class="action-btn" data-action="cierre-caja" onclick="window.location.href='cxc.html'">
           <span class="action-icon">🧾</span>
           <span>Cierre de caja</span>
         </button>
@@ -229,7 +227,7 @@
       </form>
     </section>
 
-    <!-- Orders table (idéntica en estructura) -->
+    <!-- Orders table (idéntica en estructura, con ajustes: quitamos columna VENDEDOR y añadimos CANTIDAD) -->
     <section class="table-wrap card" style="margin-top:16px;">
       <div class="table-header">
         <h3>Pedidos</h3>
@@ -243,11 +241,11 @@
               <th>ID</th>
               <th>CLIENTE</th>
               <th>PRODUCTO</th>
+              <th>CANT.</th>
               <th>FECHA</th>
               <th>TOTAL</th>
               <th>ESTADO PAGO</th>
               <th>ESTADO ENVÍO</th>
-              <th>VENDEDOR</th>
               <th>MOTORIZADO</th>
               <th>ACCIONES</th>
             </tr>
@@ -258,7 +256,7 @@
     </section>
   </main>
 
-  <!-- Mantengo los modales del administrador para mantener diseño identico, pero los controles admin-only serán ocultados por JS -->
+  <!-- Modales -->
   <div id="assignModal" class="modal hidden" aria-hidden="true" role="dialog" aria-modal="true"
     aria-labelledby="assignModalTitle">
     <div class="modal-content" role="document">
@@ -308,14 +306,31 @@
     aria-labelledby="viewModalTitle">
     <div class="modal-content" role="document">
       <div class="modal-header">
-        <h2 id="viewModalTitle">Estado del pedido</h2>
+        <h2 id="viewModalTitle">Detalle del pedido</h2>
         <button class="close-btn" id="viewModalClose" aria-label="Cerrar">×</button>
       </div>
       <div class="modal-body" id="viewModalBody" style="padding:12px 0;">
-        <div id="orderTimeline"></div>
+        <!-- Aquí se inyectará: tarjeta cliente + lista de productos (miniaturas) -->
       </div>
       <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:8px; padding-top:12px;">
         <button class="btn-secondary" id="viewCloseBtn">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI info modal -->
+  <div id="kpiModal" class="modal hidden" aria-hidden="true" role="dialog" aria-modal="true"
+    aria-labelledby="kpiModalTitle">
+    <div class="modal-content" role="document">
+      <div class="modal-header">
+        <h2 id="kpiModalTitle">Información</h2>
+        <button class="close-btn" id="kpiModalClose" aria-label="Cerrar">×</button>
+      </div>
+      <div class="modal-body" id="kpiModalBody" style="padding:12px 0;">
+        <!-- Contenido dinámico -->
+      </div>
+      <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:8px; padding-top:12px;">
+        <button class="btn-secondary" id="kpiModalCloseBtn">Cerrar</button>
       </div>
     </div>
   </div>

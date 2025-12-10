@@ -1,8 +1,3 @@
-// auth.js
-// Lógica de autenticación (Firebase v12) con modal reutilizable, Google sign-in
-// y mejoras: login muestra modal + redirección, toggles de ver/ocultar contraseña,
-// y validación en registro con requisitos (mayúsculas/minúsculas/número/longitud).
-
 import { firebaseConfig } from './firebase-config.js';
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import {
@@ -95,15 +90,18 @@ function showModal(message, title = 'Aviso') {
 
 /* --- Helper para logging de errores de Auth --- */
 function handleAuthError(err, contextMessage = '') {
+    // Mantener detalles en consola para debugging
     console.error('Auth error (full):', err);
     console.error('Auth error code:', err && err.code);
     console.error('Auth error message:', err && err.message);
 
-    let userMessage = (err && err.message) ? err.message : 'Ocurrió un error de autenticación.';
+    // Mensaje genérico para el usuario (no mostrar el texto crudo de Firebase)
+    let userMessage = 'Ocurrió un error de autenticación.';
+
     if (err && err.code) {
         switch (err.code) {
             case 'auth/operation-not-allowed':
-                userMessage = 'El método Email/Password no está permitido en el proyecto de Firebase que estás usando. Verifica el proyecto y que Email/Password esté habilitado en Authentication -> Sign-in method.';
+                userMessage = 'El método Email/Password no está permitido. Habilítalo en la consola de Firebase.';
                 break;
             case 'auth/invalid-email':
                 userMessage = 'El correo ingresado no tiene un formato válido.';
@@ -112,13 +110,13 @@ function handleAuthError(err, contextMessage = '') {
                 userMessage = 'El correo ya está registrado.';
                 break;
             case 'auth/weak-password':
-                userMessage = 'La contraseña es muy débil. Usa al menos 8 caracteres (recomiendo 8+).';
+                userMessage = 'La contraseña es muy débil. Usa al menos 8 caracteres.';
                 break;
             case 'auth/popup-closed-by-user':
                 userMessage = 'El inicio con Google fue cancelado por el usuario.';
                 break;
             case 'auth/unauthorized-domain':
-                userMessage = 'Dominio no autorizado para autenticación. Añade el dominio en la consola de Firebase (Authorized domains).';
+                userMessage = 'Dominio no autorizado para autenticación. Añade el dominio en la consola de Firebase.';
                 break;
             case 'auth/wrong-password':
                 userMessage = 'Contraseña incorrecta.';
@@ -126,10 +124,13 @@ function handleAuthError(err, contextMessage = '') {
             case 'auth/user-not-found':
                 userMessage = 'No existe una cuenta con ese correo.';
                 break;
+            case 'auth/too-many-requests':
+                userMessage = 'Se han detectado muchos intentos fallidos. Intenta más tarde.';
+                break;
             default:
+                userMessage = 'No se pudo completar la autenticación. Intenta de nuevo más tarde.';
                 break;
         }
-        userMessage = (userMessage ? userMessage : err.message) + (err.code ? ` (${err.code})` : '');
     }
 
     if (contextMessage) {
@@ -245,7 +246,29 @@ if (loginForm) {
                 setTimeout(() => redirectByRole('vendedor'), 900);
             }
         } catch (err) {
-            handleAuthError(err, 'No se pudo iniciar sesión.');
+            // Manejo más amigable para errores comunes de login:
+            if (err && err.code) {
+                switch (err.code) {
+                    case 'auth/wrong-password':
+                        setInputAlert('login-password-alert', 'Contraseña incorrecta.');
+                        return;
+                    case 'auth/user-not-found':
+                        setInputAlert('login-email-alert', 'No existe una cuenta con ese correo.');
+                        return;
+                    case 'auth/invalid-email':
+                        setInputAlert('login-email-alert', 'El correo ingresado no tiene un formato válido.');
+                        return;
+                    case 'auth/too-many-requests':
+                        showModal('Se han realizado demasiados intentos fallidos. Intenta más tarde.', 'Atención');
+                        return;
+                    default:
+                        // Para otros códigos, mostrar modal amigable (y logging en consola dentro de handleAuthError)
+                        handleAuthError(err, 'No se pudo iniciar sesión.');
+                        return;
+                }
+            } else {
+                handleAuthError(err, 'No se pudo iniciar sesión.');
+            }
         }
     });
 }
@@ -369,7 +392,7 @@ if (goRegisterBtn) {
 
 /* --- Observador de estado de autenticación --- */
 onAuthStateChanged(auth, async (user) => {
-    const onAuthPages = ['/index.html', '/', '/register.html', '/index.html', '/login.html'];
+    const onAuthPages = ['/index.html', '/', '/index.html', '/login.html'];
     if (!user) {
         if (window.location.pathname.startsWith('/admin')) {
             window.location.href = '/index.html';

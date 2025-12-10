@@ -4,151 +4,497 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Motorizado - Panel</title>
-  <link rel="stylesheet" href="assets/css/styles.css">
+  <title>Motorizado — Pedidos</title>
+
+  <!-- Estilos compartidos ya presentes en el proyecto -->
+  <link rel="stylesheet" href="assets/css/styles-pruducts.css">
+  <link rel="stylesheet" href="assets/css/admin-products.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/order-management.css">
+
+  <!-- Nuevo CSS del modal de pago -->
+  <link rel="stylesheet" href="assets/css/payment-modal.css">
+  <link rel="stylesheet" href="../assets/css/presence.css">
 </head>
 
 <body>
-  <div class="app-shell">
-    <aside class="sidebar" id="sidebar" aria-label="Barra lateral">
-      <div class="brand">
-        <div class="logo">M</div>
-        <div class="app-name">FinSet</div>
+  <input id="nav-toggle" type="checkbox" class="nav-toggle" aria-hidden="true">
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="top-left">
+      <label for="nav-toggle" class="hamburger" aria-hidden="true">
+        <span class="hamburger-box"><span class="hamburger-inner"></span></span>
+      </label>
+      <a class="brand" href="./" aria-label="Dashboard">
+        <img src="assets/img/logo.png" alt="Varius" width="14%">
+
+        <span class="brand-text">VARIUS</span>
+      </a>
+    </div>
+
+    <div class="top-search">
+      <label for="q" class="sr-only">Buscar</label>
+      <input id="q" type="search" placeholder="Search orders..." aria-label="Buscar" />
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" aria-label="Navegación principal">
+    <nav>
+      <ul class="nav-list">
+        <li class="nav-item active">
+          <a href="./" class="nav-link">
+            <span class="nav-icon" aria-hidden="true">🏠</span>
+            <span class="nav-text">Dashboard</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="usuarios.html" class="nav-link">
+            <span class="nav-icon" aria-hidden="true">👥</span>
+            <span class="nav-text">Usuarios</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="./product.html" class="nav-link">
+            <span class="nav-icon" aria-hidden="true">📦</span>
+            <span class="nav-text">Productos</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="orders.html" class="nav-link">
+            <span class="nav-icon" aria-hidden="true">📋</span>
+            <span class="nav-text">Pedidos</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="cxc.html" class="nav-link">
+            <span class="nav-icon" aria-hidden="true">💰</span>
+            <span class="nav-text">CxC</span>
+          </a>
+        </li>
+
+      </ul>
+
+      <!-- bottom user block -->
+      <div class="sidebar-user">
+        <div class="sidebar-user-info">
+          <span class="avatar circle"></span>
+          <div class="user-meta">
+            <div class="name"></div>
+            <div class="email"></div>
+          </div>
+        </div>
+        <a href="#" class="logout-btn" id="logout">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-power"
+            viewBox="0 0 16 16">
+            <path d="M7.5 1v7h1V1z" />
+            <path d="M3 8.812a5 5 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812" />
+          </svg>
+        </a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main">
+
+    <!-- KPIs (mismo esquema) -->
+    <section class="kpis" aria-label="Indicadores rápidos">
+      <article class="card kpi-card">
+        <div class="kpi-info">
+          <div class="kpi-title">Entregas completadas</div>
+          <div class="kpi-value" id="kpi-delivered">—</div>
+          <div class="kpi-meta muted">Total</div>
+        </div>
+        <div class="kpi-icon" aria-hidden="true">
+          <div class="icon-square">✅</div>
+        </div>
+      </article>
+
+      <article class="card kpi-card">
+        <div class="kpi-info">
+          <div class="kpi-title">Entregas hoy</div>
+          <div class="kpi-value" id="kpi-delivered-today">—</div>
+          <div class="kpi-meta muted">Hoy</div>
+        </div>
+        <div class="kpi-icon" aria-hidden="true">
+          <div class="icon-square">📅</div>
+        </div>
+      </article>
+
+      <article class="card kpi-card">
+        <div class="kpi-info">
+          <div class="kpi-title">Pedidos asignados</div>
+          <div class="kpi-value" id="kpi-assigned">—</div>
+          <div class="kpi-meta muted">En curso</div>
+        </div>
+        <div class="kpi-icon" aria-hidden="true">
+          <div class="icon-square">🏷️</div>
+        </div>
+      </article>
+
+      <article class="card kpi-card">
+        <div class="kpi-info">
+          <div class="kpi-title">Caja</div>
+          <div class="kpi-value">Abierta</div>
+          <div class="kpi-meta muted">Estado actual</div>
+        </div>
+        <div class="kpi-icon" aria-hidden="true">
+          <div class="icon-square">🏧</div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Quick actions -->
+    <section class="table-wrap card quick-actions-card" aria-label="Acciones rápidas">
+      <div class="table-header" style="padding: 18px 12px;">
+        <h3>Acciones Rápidas</h3>
+      </div>
+      <div class="quick-actions" style="padding: 12px;">
+        <button class="action-btn action-primary" data-action="mi-ruta">
+          <span class="action-icon">🗺️</span>
+          <span>Ver ruta</span>
+        </button>
+
+        <button class="action-btn" data-action="inventario" onclick="window.location.href='product.html'">
+          <span class="action-icon">🏬</span>
+          <span>Inventario</span>
+        </button>
+
+        <button class="action-btn" data-action="cierre-caja" onclick="window.location.href='cxc.html'">
+          <span class="action-icon">🧾</span>
+          <span>Cierre de caja</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="filters-card card" aria-label="Filtros de pedidos" style="margin-top:16px;">
+      <div class="table-header" style="padding: 0 6px 12px;">
+        <h3>Filtros</h3>
       </div>
 
-      <nav class="sidebar-nav" aria-label="Navegación">
-        <a href="#tareas" class="nav-item"><span>📦</span><span>Tareas</span></a>
-        <a href="#mapa" class="nav-item"><span>🗺️</span><span>Mapa</span></a>
-        <a href="#historial" class="nav-item"><span>📜</span><span>Historial</span></a>
-        <a href="#ajustes" class="nav-item"><span>⚙️</span><span>Ajustes</span></a>
-      </nav>
+      <form class="filters-grid" id="ordersFilters" style="gap:12px; align-items:end;">
+        <div class="filter-field">
+          <label for="fechaInicio">Fecha inicio</label>
+          <input id="fechaInicio" name="fechaInicio" type="date" />
+        </div>
 
-      <div class="sidebar-footer">
-        <button class="btn btn-ghost">Ayuda</button>
-        <button class="logout-btn">Cerrar sesión</button>
+        <div class="filter-field">
+          <label for="fechaFin">Fecha fin</label>
+          <input id="fechaFin" name="fechaFin" type="date" />
+        </div>
+
+        <div class="filter-field">
+          <label for="productoFiltro">Producto</label>
+          <select id="productoFiltro" name="productoFiltro">
+            <option value="">Todos</option>
+          </select>
+        </div>
+
+        <div class="filter-field">
+          <label for="estadoPago">Estado de pago</label>
+          <select id="estadoPago" name="estadoPago">
+            <option value="">Todos</option>
+            <option value="pagado">Pagado</option>
+            <option value="pendiente">Pendiente</option>
+          </select>
+        </div>
+
+        <div class="filter-field">
+          <label for="estadoEnvio">Estado de envío</label>
+          <select id="estadoEnvio" name="estadoEnvio">
+            <option value="">Todos</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="enviado">Enviado</option>
+            <option value="entregado">Entregado</option>
+          </select>
+        </div>
+
+        <div style="grid-column: 1 / -1; display:flex; justify-content:flex-start; margin-top:4px;">
+          <button type="button" class="btn-apply" id="applyFilters">Aplicar filtros</button>
+          <button type="button" class="btn-secondary" id="resetFilters" style="margin-left:8px;">Limpiar</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Orders table -->
+    <section class="table-wrap card" style="margin-top:16px;">
+      <div class="table-header">
+        <h3>Pedidos asignados</h3>
+        <a class="view-all admin-only" href="#" id="downloadCsv">Exportar CSV</a>
       </div>
-    </aside>
+      <div class="table-scroll">
+        <table id="ordersTable" class="products-table orders-table" role="table" aria-label="Tabla de pedidos">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>CLIENTE</th>
+              <th>PRODUCTO</th>
+              <th>FECHA</th>
+              <th>TOTAL</th>
+              <th>ESTADO PAGO</th>
+              <th>ESTADO ENVÍO</th>
+              <th>VENDEDOR</th>
+              <th>MOTORIZADO</th>
+              <th>ACCIONES</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTbody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
 
-    <main class="canvas">
-      <header class="header">
-        <div class="header-left">
-          <button id="menuToggle" class="menu-toggle" aria-label="Abrir menú">☰</button>
-          <div>
-            <div class="header-title">Dashboard - Motorizado</div>
-            <div class="small">Resumen de entregas y rutas</div>
-          </div>
-        </div>
+  <!-- Assign Modal (se conserva si quieres) -->
+  <div id="assignModal" class="modal hidden" aria-hidden="true" role="dialog" aria-modal="true"
+    aria-labelledby="assignModalTitle">
+    <div class="modal-content" role="document">
+      <div class="modal-header">
+        <h2 id="assignModalTitle">Asignar personal al pedido</h2>
+        <button class="close-btn" id="assignModalClose" aria-label="Cerrar">×</button>
+      </div>
 
-        <div class="header-actions">
-          <div class="search">
-            <svg width="16" height="16" viewBox="0 0 24 24">
-              <path fill="#6b7280" d="M21 21l-4.35-4.35" />
-            </svg>
-            <input type="search" placeholder="Buscar pedido, dirección..." aria-label="Buscar">
-          </div>
-
-          <button class="icon-btn" title="Notificaciones">🔔</button>
-
-          <div class="avatar" title="Perfil">
-            <img src="https://i.pravatar.cc/100?u=motorizado" alt="avatar">
-          </div>
-        </div>
-      </header>
-
-      <section class="metrics-grid" aria-label="Indicadores principales" style="margin-top:6px;">
-        <div class="metric">
-          <div class="label">Entregas hoy</div>
-          <div class="value">24</div>
-          <div class="meta"><span class="pulse-up">+12%</span><span class="small">Comparado con ayer</span></div>
-        </div>
-
-        <div class="metric">
-          <div class="label">En ruta</div>
-          <div class="value">4</div>
-          <div class="meta"><span class="small">Tiempo promedio: 18 min</span></div>
-        </div>
-
-        <div class="metric">
-          <div class="label">Ganancias</div>
-          <div class="value">$9,120</div>
-          <div class="meta"><span class="small">Hoy • <strong>$9,120</strong></span></div>
-        </div>
-      </section>
-
-      <section class="content-grid" style="margin-top:12px;">
+      <div class="modal-body" style="padding:12px 0;">
         <div>
-          <div class="chart-card">
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div style="font-weight:800">Resumen de entregas</div>
-              <div class="small">Últimos 30 días</div>
-            </div>
-            <div
-              style="height:220px;margin-top:12px;border-radius:8px;background:linear-gradient(180deg,#faf7ff,#fff);display:flex;align-items:center;justify-content:center;color:var(--muted);">
-              Gráfica (placeholder)</div>
-
-            <div
-              style="margin-top:12px; display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px;">
-              <div class="metric" style="padding:10px;">
-                <div class="label small">Promedio tiempo</div>
-                <div class="value" style="font-size:18px">$18 min</div>
-              </div>
-              <div class="metric" style="padding:10px;">
-                <div class="label small">Entregas completadas</div>
-                <div class="value" style="font-size:18px">20</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="chart-card" style="margin-top:12px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div style="font-weight:800">Comparativa mensual</div>
-              <div class="small">This year</div>
-            </div>
-            <div
-              style="height:140px;margin-top:12px;border-radius:8px;background:linear-gradient(180deg,#fff7f2,#fff);display:flex;align-items:center;justify-content:center;color:var(--muted);">
-              Barras (placeholder)</div>
-          </div>
+          <h3 style="margin:0 0 8px 0;">Vendedores activos y online</h3>
+          <table class="table-card small" id="vendedoresList">
+            <thead>
+              <tr>
+                <th style="width:48px;"></th>
+                <th>Nombre</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
         </div>
 
-        <aside class="stats">
-          <div class="chart-card">
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div style="font-weight:800">Estadísticas</div>
-              <div class="small">Detalles</div>
-            </div>
+        <hr style="margin:12px 0;" />
 
-            <div class="stat-visual" style="margin-top:12px;">Gráfico circular</div>
-            <div style="margin-top:8px;color:var(--muted);font-size:13px;">
-              <div>Comida y restaurantes <span class="small">40%</span></div>
-              <div>Otros <span class="small">60%</span></div>
-            </div>
-          </div>
+        <div>
+          <h3 style="margin:0 0 8px 0;">Motorizados activos y online</h3>
+          <table class="table-card small" id="motorizadosList">
+            <thead>
+              <tr>
+                <th style="width:48px;"></th>
+                <th>Nombre</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
 
-          <div class="chart-card">
-            <div style="font-weight:800">Estado jornada</div>
-            <div style="margin-top:8px;color:var(--muted)">Pendientes: <strong>3</strong></div>
-            <div style="margin-top:12px"><button class="btn btn-primary" style="width:100%;">Comenzar jornada</button>
-            </div>
-          </div>
-        </aside>
-      </section>
-
-      <section id="tareas" class="page-content hidden" style="margin-top:12px;">
-        <!-- detalle listado de tareas: cuando se seleccione en la sidebar se mostrará -->
-      </section>
-      <section id="mapa" class="page-content hidden"></section>
-      <section id="historial" class="page-content hidden"></section>
-      <section id="ajustes" class="page-content hidden"></section>
-    </main>
+      <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:8px; padding-top:12px;">
+        <button class="btn-secondary admin-only" id="assignCancel">Cancelar</button>
+        <button class="btn-primary admin-only" id="assignConfirm">Asignarlos</button>
+      </div>
+    </div>
   </div>
 
-  <script type="module">
-    import { initDashboard } from './assets/js/dashboard.js';
-    initDashboard();
+  <!-- Order view modal (detalles) -->
+  <div id="viewModal" class="modal hidden" aria-hidden="true" role="dialog" aria-modal="true"
+    aria-labelledby="viewModalTitle">
+    <div class="modal-content" role="document">
+      <div class="modal-header">
+        <h2 id="viewModalTitle">Estado del pedido</h2>
+        <button class="close-btn" id="viewModalClose" aria-label="Cerrar">×</button>
+      </div>
+      <div class="modal-body" id="viewModalBody" style="padding:12px 0;">
+        <div id="orderTimeline"></div>
+      </div>
+      <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:8px; padding-top:12px;">
+        <button class="btn-secondary" id="viewCloseBtn">Cerrar</button>
+      </div>
+    </div>
+  </div>
 
-    // example: fill avatar name from localStorage if present
-    // (actual integration: obtener nombre desde auth)
+  <!-- PAYMENT Modal: modificado para múltiples métodos y conversiones -->
+  <div id="paymentModal" class="modal hidden" aria-hidden="true" role="dialog" aria-modal="true"
+    aria-labelledby="paymentModalTitle">
+    <div class="modal-content" role="document" style="max-width:520px; width:95%; padding:12px 18px;">
+      <div class="modal-header">
+        <h2 id="paymentModalTitle">Registrar cobranza</h2>
+        <button class="close-btn" id="paymentModalClose" aria-label="Cerrar">×</button>
+      </div>
+
+      <div class="modal-body" id="paymentModalBody" style="padding:12px 0;">
+        <div class="card" style="padding:12px; margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; gap:12px;">
+            <div>
+              <div style="font-size:13px; color:var(--muted);">Cliente:</div>
+              <div id="pmCustomerName" style="font-weight:600;"></div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:13px; color:var(--muted);">Monto a cobrar (USD):</div>
+              <div id="pmTotal" style="font-weight:700; font-size:16px;">$. 0.00</div>
+              <div id="pmTotalBs" style="font-size:12px; color:var(--muted); margin-top:4px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <form id="paymentForm">
+          <!-- Métodos -->
+          <div class="payment-method" data-method="cash"
+            style="display:flex; align-items:center; gap:12px; padding:10px; border:1px solid var(--border); border-radius:8px; margin-bottom:10px;">
+            <label style="display:flex; gap:8px; align-items:center;">
+              <input type="checkbox" class="pm-check" data-method="cash">
+              <span>Efectivo (Bs.)</span>
+            </label>
+            <input type="text" inputmode="decimal" class="pm-amount" data-method="cash" value="0"
+              style="margin-left:auto; width:140px;" disabled>
+          </div>
+
+          <div class="payment-method" data-method="usd"
+            style="display:flex; align-items:center; gap:12px; padding:10px; border:1px solid var(--border); border-radius:8px; margin-bottom:10px;">
+            <label style="display:flex; gap:8px; align-items:center;">
+              <input type="checkbox" class="pm-check" data-method="usd">
+              <span>Dólares (USD)</span>
+            </label>
+            <input type="text" inputmode="decimal" class="pm-amount" data-method="usd" value="0"
+              style="margin-left:auto; width:140px;" disabled>
+          </div>
+
+          <div class="payment-method" data-method="mobile"
+            style="display:flex; align-items:center; gap:12px; padding:10px; border:1px solid var(--border); border-radius:8px; margin-bottom:10px;">
+            <label style="display:flex; gap:8px; align-items:center;">
+              <input type="checkbox" class="pm-check" data-method="mobile">
+              <span>Pago Móvil (Bs.)</span>
+            </label>
+            <input type="text" inputmode="decimal" class="pm-amount" data-method="mobile" value="0"
+              style="margin-left:auto; width:140px;" disabled>
+          </div>
+
+          <!-- Mobile bank + reference (hidden until mobile checked) -->
+          <div id="pmMobileDetails" style="display:none; margin-bottom:10px; gap:8px; align-items:center;">
+            <label for="pmMobileBank"
+              style="font-size:13px; color:var(--muted); display:block; margin-bottom:4px;">Banco</label>
+            <select id="pmMobileBank"
+              style="width:100%; padding:8px; border-radius:6px; border:1px solid var(--border); margin-bottom:8px;">
+              <option value="">Selecciona banco</option>
+              <option value="banco_de_venezuela">Banco de Venezuela</option>
+              <option value="banesco">Banesco</option>
+              <option value="mercantil">Mercantil</option>
+              <option value="provincial">Banco Provincial</option>
+              <option value="bicentenario">Banco Bicentenario</option>
+              <option value="bnc">Banco Nacional de Crédito (BNC)</option>
+              <option value="exterior">Banco Exterior</option>
+              <option value="others">Otros</option>
+            </select>
+
+            <label for="pmMobileRef"
+              style="font-size:13px; color:var(--muted); display:block; margin-bottom:4px;">Referencia / Nº</label>
+            <input id="pmMobileRef" type="text" placeholder="Número de referencia"
+              style="width:100%; padding:8px; border-radius:6px; border:1px solid var(--border);">
+          </div>
+
+          <div class="payment-method" data-method="paypal"
+            style="display:flex; align-items:center; gap:12px; padding:10px; border:1px solid var(--border); border-radius:8px; margin-bottom:10px;">
+            <label style="display:flex; gap:8px; align-items:center;">
+              <input type="checkbox" class="pm-check" data-method="paypal">
+              <span>PayPal (USD)</span>
+            </label>
+            <input type="text" inputmode="decimal" class="pm-amount" data-method="paypal" value="0"
+              style="margin-left:auto; width:140px;" disabled>
+          </div>
+
+          <div class="payment-method" data-method="other"
+            style="display:flex; align-items:center; gap:12px; padding:10px; border:1px solid var(--border); border-radius:8px; margin-bottom:10px;">
+            <label style="display:flex; gap:8px; align-items:center;">
+              <input type="checkbox" class="pm-check" data-method="other">
+              <span>Otro (Bs.)</span>
+            </label>
+            <input type="text" inputmode="decimal" class="pm-amount" data-method="other" value="0"
+              style="margin-left:auto; width:140px;" disabled>
+          </div>
+
+          <!-- Conversión: 3 opciones excluyentes -->
+          <div class="card" style="padding:12px; margin-bottom:10px;">
+            <div style="font-weight:600; margin-bottom:8px;">Conversión / tasa (para convertir USD ↔ Bs)</div>
+
+            <div style="display:flex; gap:12px; align-items:center; margin-bottom:8px;">
+              <label style="display:flex; gap:8px; align-items:center;">
+                <input type="checkbox" class="pm-conv-check" data-conv="usd_bcv">
+                <span>$ Bs (BCV)</span>
+              </label>
+
+              <label style="display:flex; gap:8px; align-items:center;">
+                <input type="checkbox" class="pm-conv-check" data-conv="eur_bcv">
+                <span>Euro Bs (BCV)</span>
+              </label>
+
+              <label style="display:flex; gap:8px; align-items:center;">
+                <input type="checkbox" class="pm-conv-check" data-conv="assign">
+                <span>Asignar</span>
+              </label>
+            </div>
+
+            <div id="pmAssignRateWrap" style="display:none; margin-top:6px;">
+              <label for="pmAssignRate"
+                style="font-size:13px; color:var(--muted); display:block; margin-bottom:4px;">Tasa personalizada (Bs por
+                USD)</label>
+              <input id="pmAssignRate" type="text" inputmode="decimal" min="0" step="0.01" placeholder="Ej. 12.34" style="width:160px;">
+            </div>
+
+            <div id="pmConvInfo" style="margin-top:8px; font-size:13px; color:var(--muted);"></div>
+            <div style="margin-top:8px;">
+              <button type="button" id="pmApplyConversion" class="btn-secondary" style="width:100%;">Convertir resto a
+                Pago Móvil / Efectivo (Bs)</button>
+            </div>
+          </div>
+
+          <div class="card" style="padding:12px; margin-top:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div style="font-weight:600">Total recibido:</div>
+              <div id="pmReceived" style="font-weight:700">$. 0.00</div>
+            </div>
+            <div style="margin-top:8px; display:flex; justify-content:space-between; gap:8px; align-items:center;">
+              <div>
+                <input type="checkbox" id="pmAmountCorrect" checked>
+                <label for="pmAmountCorrect" style="color:var(--muted); font-size:13px;">Monto correcto</label>
+              </div>
+              <div id="pmRemaining" style="font-size:13px; color:var(--muted);">Resto: $. 0.00</div>
+            </div>
+            <div id="pmError" style="color:var(--danger); margin-top:8px; display:none;"></div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer" style="display:flex; flex-direction:column; gap:8px; padding-top:12px;">
+        <button id="pmConfirmBtn" class="btn-primary" style="width:100%;">Confirmar cobranza</button>
+        <button id="pmCancelBtn" class="btn-secondary" style="width:100%;">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <!-- Sidebar user helper -->
+  <script type="module" src="../assets/js/sidebar-user.js"></script>
+
+  <script type="module">
+    import { logout } from '../assets/js/auth.js';
+    const logoutBtn = document.getElementById('logout');
+    if (logoutBtn) logoutBtn.addEventListener('click', async (e) => { e.preventDefault(); await logout(); });
+
+    // small UX: focus search
+    const q = document.getElementById('q');
+    if (q) q.addEventListener('input', (e) => {
+      document.dispatchEvent(new CustomEvent('orders:search', { detail: e.target.value }));
+    });
   </script>
+
+  <!-- App scripts -->
+  <script type="module" src="../assets/js/order-view-modal.js"></script>
+  <script type="module" src="../assets/js/payment-modal.js"></script>
+  <script type="module" src="../assets/js/motorizado-kpis.js"></script>
+  <script type="module" src="../assets/js/motorizado-orders.js"></script>
 </body>
 
 </html>

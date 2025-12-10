@@ -1,0 +1,248 @@
+:root {
+  --card-pad: 18px;
+  --muted: #6b7280;
+  --border: #e6e9ee;
+  --bg: #f8fafc;
+  --card-bg: #ffffff;
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 6px 12px rgba(16, 24, 40, 0.06);
+  --icon-bg: #f1f5f9;
+  --accent: #0f172a;
+}
+
+/* Page layout */
+body {
+  background: var(--bg);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial;
+  color: var(--accent);
+  margin: 0;
+}
+
+/* Card base */
+.card {
+  background: var(--card-bg);
+  border-radius: 10px;
+  padding: var(--card-pad);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+/* Header / Title */
+.cierre-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.cierre-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+.cierre-header .muted {
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+/* Actions */
+.cierre-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.cierre-actions select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+.cierre-actions .btn-apply,
+.cierre-actions .btn-secondary {
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+
+/* KPI grid */
+.cierre-kpis {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 12px;
+  margin-top: 12px;
+}
+.kpi-card {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 18px;
+  
+}
+.kpi-card .icon-square {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--icon-bg);
+  font-size: 20px;
+}
+.kpi-info {
+  flex: 1;
+}
+.kpi-title {
+  font-size: 13px;
+  color: var(--muted);
+}
+.kpi-value {
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+/* Breakdown card */
+.breakdown-card {
+  margin-top: 18px;
+  padding: 0;
+  overflow: hidden;
+}
+.breakdown-card > h3 {
+  margin: 0;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border);
+  font-size: 15px;
+}
+.breakdown-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.breakdown-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+  background: #fff;
+}
+.breakdown-item .left {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.breakdown-item .icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: var(--icon-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+.breakdown-item .meta {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.breakdown-item .amount {
+  text-align: right;
+  min-width: 160px;
+}
+
+/* Reconciliation card */
+.reconciliation-card {
+  margin-top: 18px;
+  padding: 16px;
+}
+.recon-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  align-items: start;
+}
+.recon-grid input,
+.recon-grid textarea {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+.recon-status .badge {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid var(--border);
+  display: inline-block;
+}
+.recon-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* Footer action */
+.action-primary {
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: #0f172a;
+  color: white;
+  border: none;
+}
+
+/* Toast: control de visibilidad y animación */
+.toast {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  background: #0f172a;
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Visible state */
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Hidden state (initial) */
+.toast.hidden {
+  display: none;
+}
+
+/* Responsive layout adjustments */
+@media (min-width: 700px) {
+  .cierre-kpis {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .breakdown-card > h3 {
+    padding-left: 24px;
+  }
+}
+@media (min-width: 1100px) {
+  .cierre-kpis {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .recon-grid {
+    grid-template-columns: 1fr 360px;
+  }
+  .breakdown-item .amount {
+    min-width: 200px;
+  }
+}
+
+/* Small visual polish */
+.card h3 {
+  margin: 0;
+  font-size: 15px;
+}

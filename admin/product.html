@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="assets/css/styles-pruducts.css">
     <link rel="stylesheet" href="assets/css/admin-products.css">
     <link rel="stylesheet" href="assets/css/style.css">
-    <script type="module" src="../assets/js/auth-guard.js"></script>
+
+        <link rel="stylesheet" href="../assets/css/presence.css">
 </head>
 
 <body>
@@ -21,15 +22,9 @@
                 <span class="hamburger-box"><span class="hamburger-inner"></span></span>
             </label>
             <a class="brand" href="./" aria-label="Dashboard">
-                <span class="logo" aria-hidden="true">
-                    <!-- simple logo svg -->
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                        <rect x="3" y="3" width="6" height="18" rx="1.5" fill="#2b6ef6"></rect>
-                        <rect x="10.5" y="9" width="6" height="12" rx="1.5" fill="#60c3ff"></rect>
-                        <rect x="18" y="15" width="3" height="6" rx="1.5" fill="#9bdc8e"></rect>
-                    </svg>
-                </span>
-                <span class="brand-text">Varius</span>
+                <img src="assets/img/logo.png" alt="Varius" width="14%">
+                
+                <span class="brand-text">VARIUS</span>
             </a>
         </div>
 
@@ -52,22 +47,6 @@
                     </a>
                 </li>
 
-                <!----
-                <li class="nav-item">
-                    <details class="nav-dropdown">
-                        <summary class="nav-link summary-link">
-                            <span class="nav-icon" aria-hidden="true">📊</span>
-                            <span class="nav-text">Analytics</span>
-                        </summary>
-                        <ul class="sub-list">
-                            <li><a href="#">Visión general</a></li>
-                            <li><a href="#">Tráfico</a></li>
-                            <li><a href="#">Conversiones</a></li>
-                        </ul>
-                    </details>
-                </li>
-                ---->
-
                 <!-- Customers -->
                 <li class="nav-item">
                     <a href="usuarios.html" class="nav-link">
@@ -78,7 +57,7 @@
 
                 <!-- Reports -->
                 <li class="nav-item active">
-                    <a href="./product.html" class="nav-link">
+                    <a href="product.html" class="nav-link">
                         <span class="nav-icon" aria-hidden="true">📦</span>
                         <span class="nav-text">Productos</span>
                     </a>
@@ -88,6 +67,13 @@
                     <a href="orders.html" class="nav-link">
                         <span class="nav-icon" aria-hidden="true">📋</span>
                         <span class="nav-text">Pedidos</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="cxc.html" class="nav-link">
+                        <span class="nav-icon" aria-hidden="true">💰</span>
+                        <span class="nav-text">CxC</span>
                     </a>
                 </li>
 
@@ -120,7 +106,8 @@
         <section class="table-wrap card">
             <div class="table-header">
                 <h3>Gestión de Productos</h3>
-                <button id="openAddBtn" class="btn-add">
+                <!-- Add button has admin-only class; JS will hide it for non-admin -->
+                <button id="openAddBtn" class="btn-add admin-only">
                     <span class="plus">+</span> Añadir producto
                 </button>
             </div>
@@ -177,7 +164,7 @@
 
         <!-- Modal -->
         <div id="productModal" class="modal hidden" aria-hidden="true" role="dialog" aria-modal="true">
-            <div class="modal-content">
+            <div class="modal-content modal-lg">
                 <header class="modal-header">
                     <h2 id="modalTitle">Agregar Producto</h2>
                     <button id="closeModal" class="close-btn" aria-label="Cerrar">&times;</button>
@@ -238,9 +225,24 @@
                         </div>
                     </div>
 
+                    <!-- Image upload / drag-drop: allow multiple (min 4 recommended) -->
                     <div class="form-row">
-                        <label>Imagen</label>
-                        <input id="imageFile" type="file" accept="image/*" />
+                        <label>Imágenes (arrastra o selecciona hasta 8) <span class="muted"
+                                style="font-weight:400">mínimo 1, ideal 4</span></label>
+
+                        <div id="imageDropZone" class="image-dropzone" aria-label="Arrastra imágenes aquí">
+                            <input id="imageFile" type="file" accept="image/*" multiple />
+                            <div class="dz-instructions">
+                                Arrastra imágenes o haz click para seleccionar (máx. 8)
+                            </div>
+                        </div>
+
+                        <!-- Slider thumbnails preview -->
+                        <div id="imagePreviewSlider" class="image-slider hidden" aria-hidden="true">
+                            <button type="button" id="prevSlide" class="slide-btn">‹</button>
+                            <div class="slide-track" id="slideTrack"></div>
+                            <button type="button" id="nextSlide" class="slide-btn">›</button>
+                        </div>
                     </div>
 
                     <div class="form-row">
@@ -249,7 +251,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn-primary">Guardar</button>
+                        <button type="submit" class="btn-primary admin-only">Guardar</button>
                         <button type="button" id="cancelBtn" class="btn-secondary">Cancelar</button>
                     </div>
                 </form>
@@ -261,6 +263,7 @@
 
     <script type="module" src="../assets/js/sidebar-user.js"></script>
     <script type="module" src="../assets/js/product-admin.js"></script>
+    <script type="module" src="../assets/js/mini-rotator.js"></script>
 </body>
 
 </html>

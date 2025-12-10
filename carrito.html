@@ -27,67 +27,109 @@
       </div>
     </section>
 
-    <!-- Productos (grid) -->
-    <section class="products-grid" id="productsGrid" aria-live="polite">
-      <!-- Renderizado por script.js -->
-      <div id="productsSpinner" class="spinner">Cargando productos…</div>
-    </section>
-  </main>
-
-  <!-- Modal: Carrito -->
-  <div id="cartModal" class="modal hidden" aria-hidden="true" role="dialog">
-    <div class="modal-panel" role="document">
-      <header class="modal-header">
-        <button id="closeCart" class="back" aria-label="Cerrar carrito">←</button>
-        <h3>Tu carrito</h3>
-      </header>
-      <div class="modal-body" id="cartBody">
-        <div id="cartItems"></div>
-        <div id="cartSummary" class="cart-summary">
-          <div>Subtotal: <strong id="cartSubtotal">$0</strong></div>
-          <div>Envío: <strong id="cartShipping">Gratis</strong></div>
-          <div class="total">Total: <strong id="cartTotal">$0</strong></div>
+    <!-- Página de carrito: dividida en panel izquierdo (carrito) y derecho (checkout) -->
+    <section id="cartPage" class="cart-page">
+      <!-- Panel carrito (ahora inline, puede minimizarse) -->
+      <aside id="cartPanel" class="cart-panel" role="region" aria-label="Carrito">
+        <header class="cart-header">
+          <div class="cart-header-left">
+            <h2>Tu carrito</h2>
+            <div class="cart-subhead">Envío: <strong id="cartShippingInline">GRATIS</strong></div>
+          </div>
+          <button id="minimizeCartBtn" class="mini-toggle" aria-label="Minimizar carrito"
+            title="Minimizar carrito">—</button>
+        </header>
+        <br>
+        <div id="selectedProducts" class="selected-products" aria-live="polite" tabindex="0">
+          <!-- Productos seleccionados con quantity > 0 -->
         </div>
-        <div class="cart-actions">
+
+        <hr class="divider">
+
+        <div class="available-head"><strong>Productos disponibles</strong></div>
+        <div id="availableProducts" class="available-products" aria-live="polite">
+          <div id="productsSpinner" class="spinner">Cargando productos…</div>
+        </div>
+
+        <div class="cart-summary" id="cartSummaryInline" aria-live="polite">
+          <div>Subtotal: <strong id="cartSubtotalInline">$0</strong></div>
+          <div>Envío: <strong id="cartShippingInline2">GRATIS</strong></div>
+          <div class="total">Total: <strong id="cartTotalInline">$0</strong></div>
+        </div>
+
+        <div class="cart-actions-inline">
           <button id="continueWithData" class="btn-primary">Continuar con mis datos</button>
           <button id="clearCartBtn" class="btn-secondary">Vaciar carrito</button>
         </div>
+      </aside>
+
+      <!-- Panel checkout (right) -->
+      <section id="checkoutPanel" class="checkout-panel hidden" role="region" aria-label="Checkout">
+        <header class="checkout-header">
+          <button id="backToCart" class="back" aria-label="Volver al carrito">←</button>
+          <h3 id="checkoutTotalHeader">Total: $0</h3>
+        </header>
+
+        <form id="checkoutForm" class="checkout-form" novalidate>
+          <div class="form-row">
+            <label for="cust_name">Nombre y apellido <span class="req">*</span></label>
+            <input id="cust_name" name="name" type="text" placeholder="Ej: Ana Martínez" required autocomplete="name">
+            <div id="cust_name_err" class="field-err" aria-live="polite"></div>
+          </div>
+
+          <div class="form-row">
+            <label for="cust_email">Correo electrónico <span class="req">*</span></label>
+            <input id="cust_email" name="email" type="email" placeholder="ejemplo@correo.com" required
+              autocomplete="email" inputmode="email">
+            <div id="cust_email_err" class="field-err" aria-live="polite"></div>
+          </div>
+
+          <div class="form-row narrow">
+            <label for="cust_phone">Teléfono <span class="req">*</span></label>
+            <input id="cust_phone" name="phone" type="tel" placeholder="5512345678" required autocomplete="tel"
+              inputmode="numeric" maxlength="15">
+            <div id="cust_phone_err" class="field-err" aria-live="polite"></div>
+          </div>
+
+          <div class="form-row">
+            <label for="cust_address">Dirección completa <span class="req">*</span></label>
+            <textarea id="cust_address" name="address" placeholder="Calle, número, colonia, ciudad" required></textarea>
+            <div id="cust_address_err" class="field-err" aria-live="polite"></div>
+          </div>
+
+          <div class="form-actions">
+            <button id="checkoutSubmitBtn" type="submit" class="btn-primary" disabled>Confirmar pedido</button>
+            <button type="button" id="cancelCheckout" class="btn-secondary">Cancelar</button>
+          </div>
+          <div id="checkoutMsg" class="form-msg" aria-live="polite"></div>
+        </form>
+      </section>
+    </section>
+
+    <!-- Productos (grid) - se usa en otras vistas, conservar -->
+    <section class="products-grid" id="productsGrid" aria-live="polite" style="margin-top:22px">
+      <!-- Renderizado por script.js -->
+    </section>
+  </main>
+
+  <!-- Custom confirm modal (mejor estilo y accesible) -->
+  <div id="confirmModal" class="confirm-modal hidden" role="dialog" aria-modal="true" aria-hidden="true"
+    aria-labelledby="confirmTitle">
+    <div class="confirm-panel" role="document">
+      <div class="confirm-body">
+        <h4 id="confirmTitle" class="confirm-title">Confirmar</h4>
+        <p id="confirmMessage">¿Estás seguro?</p>
+      </div>
+      <div class="confirm-actions">
+        <button id="confirmCancel" class="btn-secondary">Cancelar</button>
+        <button id="confirmAccept" class="btn-primary">Aceptar</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal: Formulario registro / datos -->
-  <div id="checkoutModal" class="modal hidden" aria-hidden="true" role="dialog">
-    <div class="modal-panel" role="document">
-      <header class="modal-header">
-        <button id="backToCart" class="back" aria-label="Volver al carrito">←</button>
-        <h3>Completa tus datos</h3>
-      </header>
-      <form id="checkoutForm" class="modal-body" novalidate>
-        <label>Nombre y apellido <span class="req">*</span>
-          <input id="cust_name" name="name" type="text" placeholder="Ej: Ana Martínez" required>
-        </label>
-        <label>Correo electrónico <span class="req">*</span>
-          <input id="cust_email" name="email" type="email" placeholder="ejemplo@correo.com" required>
-        </label>
-        <label>Teléfono <span class="req">*</span>
-          <input id="cust_phone" name="phone" type="tel" placeholder="+52 55 1234 5678" required>
-        </label>
-        <label>Dirección completa <span class="req">*</span>
-          <textarea id="cust_address" name="address" placeholder="Calle, número, colonia, ciudad" required></textarea>
-        </label>
-        <div class="form-actions">
-          <button type="submit" class="btn-primary">Confirmar pedido</button>
-          <button type="button" id="cancelCheckout" class="btn-secondary">Cancelar</button>
-        </div>
-        <div id="checkoutMsg" class="form-msg" aria-live="polite"></div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal: Confirmación -->
-  <div id="orderConfirmModal" class="modal hidden" aria-hidden="true" role="dialog">
-    <div class="modal-panel confirm" role="document">
+  <!-- Confirmación simple inline -->
+  <div id="orderConfirmInline" class="order-confirm hidden" role="status" aria-live="polite">
+    <div class="confirm-inner">
       <h3>Pedido enviado</h3>
       <p id="orderConfirmText">Su pedido será atendido pronto. Gracias por comprar con nosotros.</p>
       <button id="closeConfirm" class="btn-primary">Cerrar</button>
@@ -96,7 +138,14 @@
 
   <div id="toast" class="toast" aria-live="polite"></div>
 
+  <footer class="site-footer">
+    <div class="container">
+      <div>© Varius - Todos los derechos reservados</div>
+    </div>
+  </footer>
+
   <script type="module" src="assets/js/pedidos-data.js"></script>
+  <script type="module" src="assets/js/ui-animations.js"></script>
 </body>
 
 </html>

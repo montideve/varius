@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="es">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -12,6 +13,7 @@
             flex-direction: column;
             gap: 6px;
         }
+
         .password-toggle {
             position: absolute;
             right: 10px;
@@ -27,11 +29,29 @@
             font-size: 13px;
             min-height: 18px;
         }
+
+        /* Nuevo estilo para el logo en el login */
+        .login-logo {
+            display: block;
+            margin: 0 auto 12px auto;
+            width: 120px;
+            max-width: 40%;
+            height: auto;
+        }
+
+        /* Ajuste pequeño para centrar título y form */
+        .card .title {
+            text-align: center;
+        }
     </style>
 </head>
+
 <body>
     <main class="page-center">
         <section class="card">
+            <!-- Logo agregado encima del título -->
+            <img src="admin/assets/img/logo.png" alt="Logo" class="login-logo" />
+
             <h1 class="title">Iniciar sesión</h1>
 
             <form id="login-form" novalidate>

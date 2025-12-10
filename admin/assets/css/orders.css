@@ -165,3 +165,75 @@ table#ordersTable {
   color: #ef4444;
   margin-top: 4px;
 }
+/* Append these button styles and small improvements for history page and orders page buttons */
+
+/* Enhanced small buttons used in orders table */
+.btn-small {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: white;
+  cursor: pointer;
+  font-size: 13px;
+  color: #111827;
+  min-width: 64px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Variant styles */
+.btn-view {
+  background: #8fd9d0a8;
+  color: #213835;
+  border-color: rgba(43, 110, 246, 0.08);
+}
+.btn-assign {
+  background: #9ad87da1;
+  color: #324628;
+  border-color: rgba(245, 158, 11, 0.08);
+}
+.btn-confirm {
+  background: #ecfdf5;
+  color: #064e3b;
+  border-color: rgba(16, 185, 129, 0.08);
+}
+.btn-history {
+  background: #f7caca85;
+  color: #533232;
+  border-color: rgba(15, 23, 42, 0.03);
+}
+
+/* Hover */
+.btn-small:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+}
+
+/* Primary / Secondary used in history page */
+.btn-primary {
+  background: var(--btn-bg);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+.btn-secondary {
+  background: #fff;
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Small muted helper */
+.small-muted {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* Minor spacing for history page containers */
+.history-grid {
+  gap: 16px;
+}

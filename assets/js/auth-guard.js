@@ -9,8 +9,8 @@ const db = getFirestore(app);
 
 // Mapear rutas por rol para redirección; ajusta rutas si usas distintas
 const ROLE_ROUTES = {
-    vendedor: '../vendedor.html',
-    motorizado: '../motorizado.html',
+    vendedor: 'vendedor.html',
+    motorizado: 'motorizado.html',
     administrador: '' // administrador se queda en la página actual (no redirigir)
 };
 
@@ -19,7 +19,7 @@ let resolved = false;
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
         // No autenticado => redirigir al index (file at root)
-        const redirectUrl = new URL('../index.html', window.location.href).toString();
+        const redirectUrl = new URL('index.html', window.location.href).toString();
         window.location.href = redirectUrl;
         return;
     }
@@ -30,7 +30,7 @@ onAuthStateChanged(auth, async (user) => {
         const snap = await getDoc(userRef);
         const role = (snap.exists() && snap.data().role) ? snap.data().role : 'vendedor';
         if (role !== 'administrador') {
-            const route = ROLE_ROUTES[role] || '../index.html';
+            const route = ROLE_ROUTES[role] || 'index.html';
             // redirigir a la ruta correspondiente
             window.location.href = new URL(route, window.location.href).toString();
             return;
@@ -40,7 +40,7 @@ onAuthStateChanged(auth, async (user) => {
     } catch (err) {
         console.error('auth-guard: error verificando rol', err);
         // En caso de error al verificar rol, redirigir al index por seguridad
-        window.location.href = new URL('../index.html', window.location.href).toString();
+        window.location.href = new URL('index.html', window.location.href).toString();
     }
 });
 

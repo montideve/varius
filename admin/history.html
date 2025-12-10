@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Historial de Clientes — Varius</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/orders.css">
+        <link rel="stylesheet" href="../assets/css/presence.css">
+    <style>
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .history-filters {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: end;
+            margin-bottom: 12px;
+        }
+
+        .history-filters label {
+            font-size: 13px;
+            color: var(--muted);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .history-filters input,
+        .history-filters select {
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: #fff;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--btn-bg);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            border: 1px solid var(--border);
+            background: #fff;
+            color: var(--muted);
+        }
+
+        .history-grid {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 16px;
+            align-items: start;
+        }
+
+        .orders-list {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            background: var(--card-bg);
+        }
+
+        .products-movement {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            background: var(--card-bg);
+        }
+
+        .small-muted {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        table.history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table.history-table th,
+        table.history-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            text-align: left;
+        }
+
+        /* small spacing for the header buttons group */
+        .history-header .actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <input id="nav-toggle" type="checkbox" class="nav-toggle" aria-hidden="true">
+
+    <!-- Top bar -->
+    <header class="topbar">
+        <div class="top-left">
+            <label for="nav-toggle" class="hamburger" aria-hidden="true">
+                <span class="hamburger-box"><span class="hamburger-inner"></span></span>
+            </label>
+            <a class="brand" href="./" aria-label="Dashboard">
+                <img src="assets/img/logo.png" alt="Varius" width="14%">
+                
+                <span class="brand-text">VARIUS</span>
+            </a>
+        </div>
+
+        <div class="top-search">
+            <label for="q" class="sr-only">Buscar</label>
+            <input id="q" type="search" placeholder="Search..." aria-label="Buscar" />
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Navegación principal">
+        <nav>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="./" class="nav-link">
+                        <span class="nav-icon" aria-hidden="true">🏠</span>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+
+                <!-- Customers -->
+                <li class="nav-item">
+                    <a href="usuarios.html" class="nav-link">
+                        <span class="nav-icon" aria-hidden="true">👥</span>
+                        <span class="nav-text">Usuarios</span>
+                    </a>
+                </li>
+
+                <!-- Reports -->
+                <li class="nav-item">
+                    <a href="./product.html" class="nav-link">
+                        <span class="nav-icon" aria-hidden="true">📦</span>
+                        <span class="nav-text">Productos</span>
+                    </a>
+                </li>
+
+                <!-- Notifications -->
+                <li class="nav-item active">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon" aria-hidden="true">📋</span>
+                        <span class="nav-text">Pedidos</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="cxc.html" class="nav-link">
+                        <span class="nav-icon" aria-hidden="true">💰</span>
+                        <span class="nav-text">CxC</span>
+                    </a>
+                </li>
+
+            </ul>
+
+            <!-- bottom user block -->
+            <div class="sidebar-user">
+                <div class="sidebar-user-info">
+                    <span class="avatar circle"></span>
+                    <div class="user-meta">
+                        <div class="name"></div>
+                        <div class="email"></div>
+                    </div>
+                </div>
+                <a href="#" class="logout-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-power" viewBox="0 0 16 16">
+                        <path d="M7.5 1v7h1V1z" />
+                        <path
+                            d="M3 8.812a5 5 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812" />
+                    </svg>
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <section class="card">
+            <div class="history-header">
+                <h3>Historial de Compras</h3>
+                <div class="actions">
+                    <!-- New button that redirects back to orders.html -->
+                    <a href="orders.html" class="btn-secondary" title="Volver a Pedidos">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-arrow-90deg-left" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M1.146 4.854a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H12.5A2.5 2.5 0 0 1 15 6.5v8a.5.5 0 0 1-1 0v-8A1.5 1.5 0 0 0 12.5 5H2.707l3.147 3.146a.5.5 0 1 1-.708.708z" />
+                        </svg>
+                    </a>
+                    <button id="exportCsv" class="btn-secondary">Exportar CSV</button>
+                </div>
+            </div>
+
+            <div class="history-filters">
+                <div>
+                    <label>Desde</label>
+                    <input type="date" id="histFrom" />
+                </div>
+                <div>
+                    <label>Hasta</label>
+                    <input type="date" id="histTo" />
+                </div>
+                <div>
+                    <label>Nombre o teléfono</label>
+                    <input type="text" id="histSearch" placeholder="Nombre o teléfono..." />
+                </div>
+                <div style="align-self:flex-end;">
+                    <button id="applyHistFilters" class="btn-primary">Aplicar filtros</button>
+                    <button id="clearHistFilters" class="btn-secondary">Limpiar</button>
+                </div>
+            </div>
+
+            <div class="history-grid">
+                <div class="orders-list">
+                    <h4>Pedidos</h4>
+                    <div id="histOrdersContainer" style="margin-top:8px;"></div>
+                </div>
+
+                <div class="products-movement">
+                    <h4>Movimiento de Productos</h4>
+                    <div id="movementContainer"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast" class="toast hidden"></div>
+
+    <script type="module" src="../assets/js/sidebar-user.js"></script>
+    <script type="module" src="../assets/js/history-admin.js"></script>
+</body>
+
+</html>

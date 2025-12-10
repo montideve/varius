@@ -1,0 +1,55 @@
+/* payment-modal.css
+   Styles for the payment modal. Uses variables already defined in your project's CSS.
+   Small, responsive adjustments to match existing look & feel.
+*/
+
+:root {
+  --pm-width: 420px;
+}
+
+/* Ensure modal content sizing aligns with existing modal rules */
+#paymentModal .modal-content {
+  max-width: var(--pm-width);
+  width: 95%;
+  border-radius: 10px;
+}
+
+/* Payment method input style */
+#paymentModal .payment-method input[type="number"] {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px;
+  background: white;
+  text-align: right;
+}
+
+/* Checkbox little tweak */
+#paymentModal .pm-check {
+  width: 16px;
+  height: 16px;
+}
+
+/* Error message */
+#paymentModal #pmError {
+  font-size: 13px;
+}
+
+/* Card inside modal should use project card styles */
+#paymentModal .card {
+  background: var(--card);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+/* Responsive: on very small widths reduce padding */
+@media (max-width: 480px) {
+  #paymentModal .modal-content {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+/* Guarantee modal z-index */
+#paymentModal.modal {
+  z-index: 3000;
+}

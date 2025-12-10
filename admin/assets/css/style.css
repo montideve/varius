@@ -1,7 +1,8 @@
+/* style.css (UPDATED responsivo filtros y tabla, y estilos para modal de productos) */
 :root {
   --bg: #f6f7f8;
   --card-bg: #fff;
-  --btn-bg: #111827;
+  --btn-bg: #C6B9E8;
   --card: #ffffff;
   --muted: #6b7280;
   --border: #e6e8eb;
@@ -219,7 +220,7 @@ nav .nav-list {
 
 /* sidebar bottom user */
 .sidebar-user {
-  margin-top: 500px;
+  margin-top: 450px;
   padding-top: 12px;
   border-top: 1px dashed var(--border);
   display: flex;
@@ -283,6 +284,10 @@ nav .nav-list {
   gap: var(--gap);
   margin-bottom: 18px;
 }
+
+/* KPI card tweaks */
+.kpi-card { cursor: pointer; }
+.kpi-card:focus { outline: 3px solid rgba(43, 110, 246, 0.12); outline-offset: 2px; }
 
 /* --- NUEVOS ESTILOS KPI Y ACCIONES RÁPIDAS --- */
 /* tarjetas KPI más espaciosas y con icono a la derecha */
@@ -370,8 +375,8 @@ nav .nav-list {
 
 /* estilo para el botón principal */
 .action-primary {
-  background: #0f172a;
-  color: white;
+  background: var(--btn-bg);
+  color: #522db3;
   border: 1px solid rgba(255, 255, 255, 0.04);
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
 }
@@ -497,6 +502,7 @@ nav .nav-list {
   font-size: 14px;
 }
 
+/* thumb used in several places */
 .thumb {
   width: 44px;
   height: 44px;
@@ -506,24 +512,6 @@ nav .nav-list {
   align-items: center;
   justify-content: center;
   color: #9aa0a6;
-}
-
-/* badges & actions */
-.badge {
-  display: inline-block;
-  padding: 6px 10px;
-  border-radius: 12px;
-  background: #f3f4f6;
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.badge-state {
-  background: #f3f4f6;
-  color: #374151;
-  padding: 6px 10px;
-  border-radius: 12px;
-  font-size: 12px;
 }
 
 /* top search */
@@ -610,7 +598,117 @@ nav .nav-list {
   font-size: 13px;
 }
 
-/* RESPONSIVE */
+/* Filters improvements: more responsive, wrapping and clearer layout */
+.filters-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  padding: 16px;
+  border-radius: 8px;
+}
+
+/* Grid de filtros: desktop optimizado, tablet 2 columnas, mobile apilado */
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 14px;
+  align-items: end;
+}
+
+/* Field */
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-field label {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.filter-field input[type="date"],
+.filter-field select,
+.filter-field input[type="text"] {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #fbfbfb;
+  font-size: 14px;
+  color: #111827;
+}
+
+/* Botón aplicar filtros */
+.btn-apply {
+  background: var(--btn-bg);
+  color: #522db3;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* Ajustes para la tabla de pedidos */
+.orders-table thead {
+  background: #f8fafc;
+}
+
+.orders-table thead th {
+  padding: 14px 18px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.orders-table tbody td {
+  padding: 14px 18px;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f3f5;
+  color: #111827;
+}
+
+/* Badges */
+.badge.paid {
+  background: #ecfdf5;
+  color: #16a34a;
+  border: 1px solid rgba(16, 185, 129, 0.08);
+}
+
+.badge.pending {
+  background: #fff7ed;
+  color: #c2410c;
+  border: 1px solid rgba(245, 158, 11, 0.06);
+}
+
+.badge.shipped {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid rgba(59, 130, 246, 0.06);
+}
+
+.badge.delivered {
+  background: #f1f5f9;
+  color: #0f172a;
+  border: 1px solid rgba(15, 23, 42, 0.03);
+}
+
+/* Order product mini list and customer card styles for modal */
+.order-products-list .product-mini img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.customer-card .thumb {
+  width: 64px;
+  height: 64px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* Responsive rules */
 /* tablet */
 @media (max-width: 1100px) {
   .kpis {
@@ -624,6 +722,11 @@ nav .nav-list {
   .main {
     padding: 16px;
     margin-left: var(--sidebar-w);
+  }
+
+  /* Filters: make grid 3 columns for medium screens */
+  .filters-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -674,9 +777,34 @@ nav .nav-list {
     min-width: 100%;
     justify-content: flex-start;
   }
+
+  /* Filters: stack fields */
+  .filters-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-card {
+    padding: 12px;
+  }
+
+  /* Table: hide less important columns to fit screen
+     Show: ID, CLIENTE, PRODUCTO, CANT., TOTAL, ESTADO ENVÍO, ACCIONES */
+  .orders-table thead th:nth-child(5),
+  .orders-table tbody td:nth-child(5), /* FECHA */
+  .orders-table thead th:nth-child(7),
+  .orders-table tbody td:nth-child(7), /* ESTADO PAGO */
+  .orders-table thead th:nth-child(9),
+  .orders-table tbody td:nth-child(9)  /* MOTORIZADO */
+  {
+    display: none;
+  }
+
+  .orders-table {
+    min-width: 0;
+  }
 }
 
-/* keyboard focus & hover polish */
+/* small polish */
 a:focus,
 button:focus,
 summary:focus {
@@ -702,177 +830,23 @@ summary:focus {
   border: 0;
 }
 
-/* Contenedor de filtros */
-.filters-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  padding: 16px;
-  border-radius: 8px;
+.btn-link {
+  background: #8fd9d0a8;
+  color: #213835;
+  border-color: rgba(43, 110, 246, 0.08);
 }
-
-/* Grid de filtros: 6 columnas en desktop */
-.filters-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 14px;
-  align-items: end;
+.btn-edit {
+  background: #9ad87da1;
+  color: #324628;
+  border-color: rgba(245, 158, 11, 0.08);
 }
-
-/* Campo de filtro */
-.filter-field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.filter-field label {
-  font-size: 13px;
-  color: var(--muted);
-}
-
-.filter-field input[type="date"],
-.filter-field select,
-.filter-field input[type="text"] {
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: #fbfbfb;
-  font-size: 14px;
-  color: #111827;
-}
-
-/* Botón aplicar filtros */
-.btn-apply {
-  background: var(--btn-bg);
-  color: white;
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-/* Ajustes para la tabla de pedidos */
-.orders-table thead {
-  background: #f8fafc;
-}
-
-.orders-table thead th {
-  padding: 14px 18px;
-  text-align: left;
-  font-weight: 600;
-  color: var(--muted);
-  border-bottom: 1px solid var(--border);
-}
-
-.orders-table tbody td {
-  padding: 14px 18px;
-  vertical-align: middle;
-  border-bottom: 1px solid #f1f3f5;
-  color: #111827;
-}
-
-/* Badges de estados específicos */
-.badge {
-  display: inline-block;
-  padding: 6px 10px;
-  border-radius: 12px;
-  background: var(--badge-bg);
-  color: var(--muted);
-  font-size: 12px;
-}
-
-/* estados más visuales */
-.badge.paid {
+.btn-confirm {
   background: #ecfdf5;
-  color: #16a34a;
-  border: 1px solid rgba(16, 185, 129, 0.08);
+  color: #064e3b;
+  border-color: rgba(16, 185, 129, 0.08);
 }
-
-.badge.pending {
-  background: #fff7ed;
-  color: #c2410c;
-  border: 1px solid rgba(245, 158, 11, 0.06);
-}
-
-.badge.shipped {
-  background: #eff6ff;
-  color: #2563eb;
-  border: 1px solid rgba(59, 130, 246, 0.06);
-}
-
-.badge.delivered {
-  background: #f1f5f9;
-  color: #0f172a;
-  border: 1px solid rgba(15, 23, 42, 0.03);
-}
-
-
-/* Responsive: apilar filtros en mobile */
-@media (max-width: 900px) {
-  .filters-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .filters-card {
-    padding: 12px;
-  }
-
-  .orders-table {
-    min-width: 700px;
-  }
-}
-
-/* presence.css
-   Indicador de presencia dentro de .top-search.
-   Añadir este archivo en las páginas (ej: administrador.html, vendedor.html, motorizado.html):
-   <link rel="stylesheet" href="../assets/css/presence.css">
-*/
-
-.top-search {
-  position: relative; /* necesario para posicionar el indicador sin tocar HTML */
-}
-
-/* indicador pequeño, accesible */
-.presence-indicator {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  font-size: 0; /* ocultar el bullet visual si deseas solo color */
-  line-height: 0;
-  transition: background-color 180ms ease, box-shadow 180ms ease;
-  box-shadow: 0 0 0 2px rgba(0,0,0,0.04);
-}
-
-/* estados */
-.presence-indicator.online {
-  background-color: #22c55e; /* verde */
-  box-shadow: 0 0 6px rgba(34,197,94,0.18);
-}
-
-.presence-indicator.offline {
-  background-color: #9ca3af; /* gris */
-  box-shadow: none;
-}
-
-/* Si quieres un estado "desconectando" o error, puedes añadir .offline.error { background: #ef4444 } */
-.presence-indicator.offline.error {
-  background-color: #ef4444; /* rojo */
-  box-shadow: 0 0 6px rgba(239,68,68,0.18);
-}
-
-/* pequeña mejora: en pantallas estrechas no tapar el input */
-@media (max-width: 420px) {
-  .presence-indicator {
-    right: 6px;
-    width: 10px;
-    height: 10px;
-  }
+.btn-suspender {
+  background: #f7caca85;
+  color: #533232;
+  border-color: rgba(15, 23, 42, 0.03);
 }
