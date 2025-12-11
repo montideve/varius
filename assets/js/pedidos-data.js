@@ -1,11 +1,3 @@
-// pedidos-data.js completo y actualizado
-// - Carrito inline (minimizable), checkout inline
-// - Formulario validado en tiempo real (email, teléfono solo números, requerido)
-// - Mejora en modales y accesibilidad
-// - Eliminado botón "copiar enlace"
-// - Prevención de double submit
-// - Resolución de imágenes desde Firebase Storage y resto de funcionalidades previas
-
 import { firebaseConfig } from './firebase-config.js';
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import {
@@ -705,12 +697,16 @@ async function submitOrder(customerData) {
     const msgEl = document.getElementById('checkoutMsg');
     if (msgEl) { msgEl.textContent = 'Enviando pedido…'; msgEl.style.color = '#64748b'; }
 
+    // Asegurar que el teléfono se guarde con "+" + dígitos
+    const normalizedPhone = (customerData.phone || '').replace(/\D/g, '');
+    const phoneForSave = '+' + normalizedPhone;
+
     const orderData = {
         cartToken: CART.cartToken,
         customerData: {
             Customname: customerData.name,
             email: customerData.email,
-            phone: customerData.phone,
+            phone: phoneForSave,
             address: customerData.address
         },
         items: CART.items.map(i => ({ productId: i.productId, name: i.name, price: i.price, quantity: i.quantity, subtotal: i.subtotal })),
@@ -774,12 +770,18 @@ function validatePhone() {
     const err = document.getElementById('cust_phone_err');
     if (!el) return false;
     const v = el.value.trim();
-    if (!v) { if (err) err.textContent = 'El teléfono es obligatorio.'; return false; }
-    // permitir solo dígitos (sin letras). Longitud entre 8 y 15 dígitos.
-    if (!/^\d{8,15}$/.test(v)) {
-        if (err) err.textContent = 'Número inválido. Usa sólo dígitos (8 a 15 números).';
+
+    if (!v) {
+        if (err) err.textContent = 'El teléfono es obligatorio.';
         return false;
     }
+
+    // La expresión regular requiere un "+" seguido de 8 a 15 dígitos.
+    if (!/^\+\d{8,15}$/.test(v)) {
+        if (err) err.textContent = 'Número inválido. Debe comenzar con "+" y tener entre 8 y 15 dígitos.';
+        return false;
+    }
+
     if (err) err.textContent = '';
     return true;
 }
@@ -800,12 +802,17 @@ function validateFormAll() {
     return ok;
 }
 
-/* Helper: sanitize phone input to digits only */
+/* Helper: sanitize phone input to allow leading "+" and digits only */
 function phoneInputHandler(e) {
     const el = e.currentTarget;
-    const before = el.value;
-    const cleaned = before.replace(/\D/g, '').slice(0, 15);
-    if (cleaned !== before) el.value = cleaned;
+    let v = el.value || '';
+    // Detect if user intentionally included a leading plus
+    const hasLeadingPlus = v.startsWith('+');
+    // Remove all non-digits
+    const digitsOnly = v.replace(/\D/g, '').slice(0, 15); // max 15 digits
+    // Ensure we always show a leading '+'
+    el.value = '+' + digitsOnly;
+    // If user removed digits and left only '+', keep '+' visible.
     validatePhone();
     validateFormAll();
 }
@@ -817,9 +824,16 @@ function submitHandler(e) {
     e.preventDefault();
     const name = document.getElementById('cust_name').value.trim();
     const email = document.getElementById('cust_email').value.trim();
-    const phone = document.getElementById('cust_phone').value.trim();
+    const phoneRaw = document.getElementById('cust_phone').value.trim();
     const address = document.getElementById('cust_address').value.trim();
     const msg = document.getElementById('checkoutMsg');
+
+    // Normalizar teléfono antes de validar/enviar: dejar '+' seguido de dígitos
+    const phoneDigits = phoneRaw.replace(/\D/g, '');
+    const phone = '+' + phoneDigits;
+    // Reflejar normalización en el campo visible
+    const phoneEl = document.getElementById('cust_phone');
+    if (phoneEl) phoneEl.value = phone;
 
     if (!validateFormAll()) {
         if (msg) { msg.textContent = 'Corrige los campos indicados antes de enviar.'; msg.style.color = '#ef4444'; }
@@ -883,7 +897,12 @@ function attachGlobalEvents() {
 
     if (nameEl) { nameEl.addEventListener('input', () => { validateName(); validateFormAll(); }); nameEl.addEventListener('blur', validateName); }
     if (emailEl) { emailEl.addEventListener('input', () => { validateEmail(); validateFormAll(); }); emailEl.addEventListener('blur', validateEmail); }
-    if (phoneEl) { phoneEl.addEventListener('input', phoneInputHandler); phoneEl.addEventListener('blur', validatePhone); }
+    if (phoneEl) {
+        // Asegurar que el campo tenga "+" por defecto si está vacío
+        if (!phoneEl.value) phoneEl.value = '+';
+        phoneEl.addEventListener('input', phoneInputHandler);
+        phoneEl.addEventListener('blur', validatePhone);
+    }
     if (addrEl) { addrEl.addEventListener('input', () => { validateAddress(); validateFormAll(); }); addrEl.addEventListener('blur', validateAddress); }
 
     // submit: attach named handler (remove old to avoid duplicates)

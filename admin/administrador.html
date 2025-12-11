@@ -33,69 +33,11 @@
     </header>
 
     <!-- Sidebar -->
-    <aside class="sidebar" aria-label="Navegación principal">
-        <nav>
-            <ul class="nav-list">
-                <li class="nav-item active">
-                    <a href="./" class="nav-link">
-                        <span class="nav-icon" aria-hidden="true">🏠</span>
-                        <span class="nav-text">Dashboard</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="usuarios.html" class="nav-link">
-                        <span class="nav-icon" aria-hidden="true">👥</span>
-                        <span class="nav-text">Usuarios</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="./product.html" class="nav-link">
-                        <span class="nav-icon" aria-hidden="true">📦</span>
-                        <span class="nav-text">Productos</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="orders.html" class="nav-link">
-                        <span class="nav-icon" aria-hidden="true">📋</span>
-                        <span class="nav-text">Pedidos</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="cxc.html" class="nav-link">
-                        <span class="nav-icon" aria-hidden="true">💰</span>
-                        <span class="nav-text">Cierre de Caja</span>
-                    </a>
-                </li>
-            </ul>
-
-            <!-- bottom user block -->
-            <div class="sidebar-user">
-                <div class="sidebar-user-info">
-                    <span class="avatar circle" id="sidebar-avatar"></span>
-                    <div class="user-meta">
-                        <div class="name" id="sidebar-name"></div>
-                        <div class="email" id="sidebar-email"></div>
-                    </div>
-                </div>
-                <a href="#" class="logout-btn" id="logout">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-power" viewBox="0 0 16 16">
-                        <path d="M7.5 1v7h1V1z" />
-                        <path
-                            d="M3 8.812a5 5 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812" />
-                    </svg>
-                </a>
-            </div>
-        </nav>
-    </aside>
+    <div id="app-sidebar"></div>
 
     <!-- Main content -->
     <main class="main">
-        <!-- KPI cards (kept) -->
+        <!-- KPI cards -->
         <section class="kpis" aria-label="Indicadores rápidos">
             <article id="kpi-lowstock" class="card kpi-card" role="button" tabindex="0" aria-pressed="false">
                 <div class="kpi-info">
@@ -108,16 +50,18 @@
                 </div>
             </article>
 
-            <article class="card kpi-card">
+            <!-- Updated Pedidos hoy KPI: keep id on value for JS, article is clickable and keyboard accessible -->
+            <article id="kpi-orders" class="card kpi-card" role="button" tabindex="0" aria-pressed="false">
                 <div class="kpi-info">
                     <div class="kpi-title">Pedidos hoy</div>
                     <div class="kpi-value" id="kpi-orders-today">—</div>
-                    <div class="kpi-meta muted">Comparado con ayer</div>
+                    <div class="kpi-meta muted">Comparado con la última fecha con pedidos</div>
                 </div>
                 <div class="kpi-icon" aria-hidden="true">
                     <div class="icon-square">📦</div>
                 </div>
             </article>
+
             <article class="card kpi-card">
                 <div class="kpi-info">
                     <div class="kpi-title">Ventas</div>
@@ -169,7 +113,7 @@
             </div>
         </section>
 
-        <!-- Filters + Orders table: aligned with orders-admin.js (same columns/buttons as orders.html) -->
+        <!-- Filters + Orders table -->
         <section class="table-wrap card" style="margin-top:16px;">
             <div class="table-header">
                 <h3>Pedidos</h3>
@@ -450,7 +394,7 @@
     <!-- Toast container -->
     <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
-    <script type="module" src="../assets/js/sidebar-user.js"></script>
+        <script type="module" src="../assets/js/sidebar-loader.js"></script>
 
     <script type="module">
         import { logout } from '../assets/js/auth.js';

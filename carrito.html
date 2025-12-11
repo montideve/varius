@@ -86,8 +86,9 @@
 
           <div class="form-row narrow">
             <label for="cust_phone">Teléfono <span class="req">*</span></label>
-            <input id="cust_phone" name="phone" type="tel" placeholder="5512345678" required autocomplete="tel"
-              inputmode="numeric" maxlength="15">
+            <!-- Ahora inicia con "+" por defecto y permite hasta 15 dígitos después del "+" -->
+            <input id="cust_phone" name="phone" type="text" placeholder="+56912345678" required autocomplete="tel"
+              inputmode="tel" maxlength="16" value="+">
             <div id="cust_phone_err" class="field-err" aria-live="polite"></div>
           </div>
 

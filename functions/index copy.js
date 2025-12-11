@@ -1,4 +1,27 @@
 'use strict';
+/**
+ * index.js - Cloud Functions v2 (complete)
+ *
+ * Funcionalidad:
+ * - Firestore onCreate trigger: asigna nueva orden a vendedor activo (round-robin)
+ * - RTDB presence onWrite trigger: al conectarse un vendedor intenta reasignar pendientes
+ * - HTTP endpoint protegido: reassignPendingOrdersHttp para forzar reasignación/manual + uso con Cloud Scheduler
+ * - processPendingOrders: busca órdenes pendientes en Firestore y RTDB y las asigna
+ * - assignOrderToNextVendor: rota (transaction) sobre assignmentMeta/lastAssignedSellerUid y escribe:
+ *     - assignedSeller (UID), assignedSellerName, assignedSellerEmail, assignedAt, status
+ *   NO sobreescribe asignación si la orden ya tiene assignedSeller en RTDB o Firestore.
+ *
+ * Requisitos / notas:
+ * - Usa firebase-functions v2 triggers (v2 Firestore / v2 Database / v2 https)
+ * - Las Cloud Functions con Admin SDK ignoran las reglas de seguridad (por diseño)
+ * - Protecciones añadidas:
+ *    * La función no sobrescribe assignedSeller si ya existe
+ *    * Frontend debe respetar locking (recomendado, pero no imprescindible si funciones protegen)
+ *
+ * Despliegue:
+ * - Desde carpeta functions: npm install (si es necesario) && firebase deploy --only functions
+ * - Asegúrate APIs habilitadas y Eventarc service agent role si hubo errores de despliegue previos.
+ */
 
 const functionsV2 = require('firebase-functions');
 const { onDocumentCreated } = require('firebase-functions/v2/firestore');
@@ -11,18 +34,6 @@ admin.initializeApp();
 
 const dbRT = admin.database();
 const firestore = admin.firestore();
-
-// Twilio client (install with: npm install twilio)
-let twilioClient = null;
-try {
-  const twilio = require('twilio');
-  const sid = process.env.TWILIO_ACCOUNT_SID || '';
-  const token = process.env.TWILIO_AUTH_TOKEN || '';
-  if (sid && token) twilioClient = twilio(sid, token);
-  else logger.warn('Twilio env vars not set (TWILIO_ACCOUNT_SID / TWILIO_AUTH_TOKEN)');
-} catch (e) {
-  logger.warn('Twilio module not available. Install "twilio" to enable WhatsApp notifications.', e);
-}
 
 /* ============================
    Helpers
@@ -74,111 +85,6 @@ async function getActiveVendorUids() {
 }
 
 /* ============================
-   Twilio / WhatsApp helpers
-   ============================ */
-
-function normalizeWhatsAppNumber(raw) {
-  if (!raw) return null;
-  const r = raw.toString().trim();
-  // already in whatsapp:+<number> format
-  if (r.startsWith('whatsapp:')) return r;
-  // international with plus
-  if (r.startsWith('+')) return `whatsapp:${r}`;
-  // try to strip non-digits and add +
-  const digits = r.replace(/[^\d]/g, '');
-  if (!digits) return null;
-  return `whatsapp:+${digits}`;
-}
-
-/**
- * sendWhatsAppMessage
- * - Uses Twilio messages.create with from set from env TWILIO_WHATSAPP_FROM (e.g. "whatsapp:+1455238886")
- * - Supports body text or contentSid + contentVariables (template)
- */
-async function sendWhatsAppMessage(toRaw, body = '', opts = {}) {
-  if (!twilioClient) {
-    logger.warn('sendWhatsAppMessage: Twilio client not configured - skipping send', { toRaw });
-    return null;
-  }
-
-  const from = process.env.TWILIO_WHATSAPP_FROM || '';
-  if (!from) {
-    logger.warn('sendWhatsAppMessage: TWILIO_WHATSAPP_FROM not configured - skipping', { toRaw });
-    return null;
-  }
-
-  const to = normalizeWhatsAppNumber(toRaw);
-  if (!to) {
-    logger.warn('sendWhatsAppMessage: invalid "to" number, skipping', { toRaw });
-    return null;
-  }
-
-  const params = { from, to };
-
-  if (opts.contentSid) {
-    params.contentSid = opts.contentSid;
-    if (opts.contentVariables) {
-      try {
-        params.contentVariables = typeof opts.contentVariables === 'string'
-          ? opts.contentVariables
-          : JSON.stringify(opts.contentVariables);
-      } catch (e) {
-        logger.warn('sendWhatsAppMessage: invalid contentVariables, ignoring', e);
-      }
-    }
-  } else {
-    params.body = body;
-  }
-
-  if (opts.mediaUrl) params.mediaUrl = opts.mediaUrl;
-
-  try {
-    const msg = await twilioClient.messages.create(params);
-    logger.info('sendWhatsAppMessage sent', { sid: msg.sid, to });
-    return msg;
-  } catch (err) {
-    logger.error('sendWhatsAppMessage error', err);
-    return null;
-  }
-}
-
-/* ============================
-   Message builders
-   ============================ */
-
-function buildProductsTextFromOrderItems(items) {
-  if (!Array.isArray(items) || !items.length) return ' - (no hay detalle disponible)';
-  return items.map(it => {
-    const name = it.name || it.title || 'Producto';
-    const qty = (typeof it.quantity !== 'undefined') ? it.quantity : (typeof it.qty !== 'undefined' ? it.qty : 1);
-    const price = (typeof it.price !== 'undefined') ? Number(it.price) : (typeof it.subtotal !== 'undefined' ? Number(it.subtotal) : null);
-    const priceStr = (price !== null && !Number.isNaN(price)) ? ` — $${(price).toFixed(2)}` : '';
-    const qtyStr = qty && qty !== 1 ? ` x${qty}` : '';
-    return `${name}${qtyStr}${priceStr}`;
-  }).join('\n');
-}
-
-function buildCustomerConfirmationMessage(orderData, sellerName) {
-  // According to user: orders store customer in customerData with fields: Customname, address, email, phone
-  const customerObj = orderData.customerData || {};
-  const customerName = customerObj.Customname || customerObj.customName || customerObj.name || 'Cliente';
-  const phone = customerObj.phone || orderData.phone || '';
-  const items = orderData.items || orderData.lineItems || orderData.products || [];
-  const productsText = buildProductsTextFromOrderItems(items);
-  const total = (typeof orderData.total !== 'undefined') ? Number(orderData.total).toFixed(2)
-    : (typeof orderData.price !== 'undefined' ? Number(orderData.price).toFixed(2) : (orderData.subtotal ? Number(orderData.subtotal).toFixed(2) : ''));
-
-  let body = `Hola Sr(a) ${customerName},\n\nSu pedido se ha realizado satisfactoriamente.\n\nProductos:\n${productsText}\n\nPrecio total del encargo: ${total ? `$${total}` : 'No disponible'}\n\n`;
-  if (sellerName) {
-    body += `Pronto será atendido por el vendedor: ${sellerName}.\n\n`;
-  } else {
-    body += `Pronto será atendido por un vendedor asignado. \n\n`;
-  }
-  body += 'Gracias por su compra.';
-  return { body, phone };
-}
-
-/* ============================
    Core: asignación round-robin
    ============================ */
 
@@ -188,9 +94,6 @@ function buildCustomerConfirmationMessage(orderData, sellerName) {
  * - Usa transaction en assignmentMeta/lastAssignedSellerUid para rotar
  * - Escribe assignedSeller, assignedSellerName, assignedSellerEmail, assignedAt y status
  * - orderSource: string (ej: 'oncreate-fs', 'auto-rr', 'rtdb')
- *
- * Sends:
- *  - WhatsApp to customer (with seller name) and to seller (notify new pending order) after assignment.
  */
 async function assignOrderToNextVendor(orderId, activeUids, orderSource = 'auto') {
   if (!Array.isArray(activeUids) || !activeUids.length) {
@@ -235,33 +138,18 @@ async function assignOrderToNextVendor(orderId, activeUids, orderSource = 'auto'
     const assignedUid = trRes && trRes.snapshot ? trRes.snapshot.val() : null;
     const finalAssigned = assignedUid || activeUids[0];
 
-    // --- 2) Obtener datos del vendedor desde Firestore (name/phone/email) si están disponibles
+    // --- 2) Obtener datos del vendedor desde Firestore (name/email) si están disponibles
     let sellerName = '';
     let sellerEmail = '';
-    let sellerPhone = '';
     try {
       const sellerDoc = await firestore.doc(`users/${finalAssigned}`).get();
       if (sellerDoc.exists) {
         const sd = sellerDoc.data() || {};
         sellerName = sd.name || sd.displayName || sd.email || '';
         sellerEmail = sd.email || '';
-        sellerPhone = sd.phone || sd.whatsapp || sd.mobile || sd.telefono || '';
       }
     } catch (e) {
       logger.warn(`assignOrderToNextVendor: reading users/${finalAssigned} failed`, e);
-    }
-
-    // --- 2b) Leer datos de la orden para mensajes (Firestore preferente, fallback RTDB)
-    let orderData = {};
-    try {
-      const od = await firestore.doc(`orders/${orderId}`).get();
-      if (od.exists) orderData = od.data() || {};
-      else {
-        const rtSnap = await dbRT.ref(`orders/${orderId}`).once('value');
-        if (rtSnap.exists()) orderData = rtSnap.val() || {};
-      }
-    } catch (e) {
-      logger.warn(`assignOrderToNextVendor: error reading order ${orderId}`, e);
     }
 
     // Timestamps
@@ -298,46 +186,6 @@ async function assignOrderToNextVendor(orderId, activeUids, orderSource = 'auto'
     ]);
 
     logger.info(`Order ${orderId} assigned to seller ${finalAssigned} (${sellerName || 'no-name'})`);
-
-    // -----------------------
-    // Notificaciones WhatsApp (customer + seller)
-    // -----------------------
-    try {
-      const notifications = { customer: null, seller: null, attemptedAt: admin.firestore.FieldValue.serverTimestamp() };
-
-      // Build and send customer message (include sellerName now that assignment done)
-      const cust = buildCustomerConfirmationMessage(orderData, sellerName);
-      if (cust.phone) {
-        const resCust = await sendWhatsAppMessage(cust.phone, cust.body);
-        notifications.customer = resCust ? { sid: resCust.sid, to: cust.phone } : { error: 'send_failed' };
-      } else {
-        logger.info(`assignOrderToNextVendor: no customer phone for order ${orderId}, skipping customer WhatsApp`);
-        notifications.customer = { skipped: true };
-      }
-
-      // Send seller notification
-      if (sellerPhone) {
-        const customerName = (orderData.customerData && (orderData.customerData.Customname || orderData.customerData.customName)) || orderData.customerName || 'Cliente';
-        const sellerBody = `Tiene un nuevo pedido pendiente (ID: ${orderId}), del cliente ${customerName}, por favor revise la plataforma.`;
-        const resSeller = await sendWhatsAppMessage(sellerPhone, sellerBody);
-        notifications.seller = resSeller ? { sid: resSeller.sid, to: sellerPhone } : { error: 'send_failed' };
-      } else {
-        logger.info(`assignOrderToNextVendor: no seller phone for user ${finalAssigned}, skipping seller WhatsApp`);
-        notifications.seller = { skipped: true };
-      }
-
-      // Persist notification metadata in Firestore (merge)
-      try {
-        await firestore.doc(`orders/${orderId}`).set({
-          notificationsSent: notifications
-        }, { merge: true });
-      } catch (e) {
-        logger.warn('assignOrderToNextVendor: could not persist notification metadata', e);
-      }
-    } catch (notifErr) {
-      logger.error('assignOrderToNextVendor: notification step failed', notifErr);
-    }
-
     return true;
   } catch (err) {
     logger.error(`assignOrderToNextVendor error for ${orderId}:`, err);
@@ -443,26 +291,13 @@ async function processPendingOrders(limit = 500) {
 /**
  * Firestore onCreate trigger (v2)
  * - Se dispara cuando se crea orders/{orderId} en Firestore
- * - Intenta asignar inmediatamente; si no hay vendedores activos marca pendiente y envía confirmación al cliente
+ * - Intenta asignar inmediatamente; si no hay vendedores activos marca pendiente
  */
 exports.assignOrderToSeller = onDocumentCreated('orders/{orderId}', async (event) => {
   const orderId = event.params?.orderId;
   logger.info('assignOrderToSeller trigger fired', { orderId });
 
   try {
-    // Read order data
-    let orderData = {};
-    try {
-      const od = await firestore.doc(`orders/${orderId}`).get();
-      if (od.exists) orderData = od.data() || {};
-      else {
-        const rtSnap = await dbRT.ref(`orders/${orderId}`).once('value');
-        if (rtSnap.exists()) orderData = rtSnap.val() || {};
-      }
-    } catch (e) {
-      logger.warn('assignOrderToSeller: could not read order data', e);
-    }
-
     const activeUids = await getActiveVendorUids();
     logger.debug('assignOrderToSeller: activeUids', { activeUids });
 
@@ -479,21 +314,6 @@ exports.assignOrderToSeller = onDocumentCreated('orders/{orderId}', async (event
         assignedAt: null,
         status: 'pendiente'
       }).catch(e => logger.debug('assignOrderToSeller: RTDB update pending failed', e));
-
-      // Send customer confirmation (no seller yet)
-      try {
-        const cust = buildCustomerConfirmationMessage(orderData, null);
-        if (cust.phone) {
-          const res = await sendWhatsAppMessage(cust.phone, cust.body);
-          await firestore.doc(`orders/${orderId}`).set({
-            notificationsSent: { customer: res ? { sid: res.sid, to: cust.phone } : { error: 'send_failed' }, pendingAssignment: true }
-          }, { merge: true });
-        } else {
-          logger.info(`assignOrderToSeller: no customer phone for order ${orderId}, skipping initial customer WhatsApp`);
-        }
-      } catch (e) {
-        logger.warn('assignOrderToSeller: error sending initial customer WhatsApp', e);
-      }
 
       logger.info(`assignOrderToSeller: order ${orderId} left pending (no active vendors)`);
       return;
@@ -573,7 +393,5 @@ exports.reassignPendingOrdersHttp = onRequest(async (req, res) => {
 exports._internal = {
   getActiveVendorUids,
   assignOrderToNextVendor,
-  processPendingOrders,
-  sendWhatsAppMessage,
-  buildCustomerConfirmationMessage
+  processPendingOrders
 };

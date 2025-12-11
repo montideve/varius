@@ -260,7 +260,7 @@ function renderProducts(list) {
 /* ---------------- Copy link ---------------- */
 function buildAddLinkForPublic(productId) {
     const origin = window.location.origin;
-    const publicPath = '/tiendita.com/carrito.html';
+    const publicPath = '/carrito.html';
     const params = new URLSearchParams({ add: productId, openCart: '1', hideProducts: '1' });
     return `${origin}${publicPath}?${params.toString()}`;
 }
