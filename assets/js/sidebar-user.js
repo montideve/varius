@@ -5,7 +5,6 @@ import { getFirestore, doc as fsDoc, getDoc } from "https://www.gstatic.com/fire
 import { logout } from './auth.js';
 import { applyUiRestrictions } from './rbac.js';
 
-// Asegura que el módulo de presence se  cargue (start presence listeners)
 import './presence.js';
 
 // init firebase app (re-use if already  initialized)
@@ -42,7 +41,6 @@ function getInitials(name) {
 }
 
 async function init() {
-    // Esperar que el sidebar exista (insertado por loader)
     await whenReady('.sidebar');
 
     // Selectores robustos: toleramos id o solo clase
@@ -76,7 +74,6 @@ async function init() {
         if (avatarEl) avatarEl.textContent = getInitials(name || role || 'U');
     }
 
-    /* PRESENCE UI: ensure presence indicator exists inside .top-search and wire events */
     function ensurePresenceIndicator() {
         if (!topSearch) return null;
 

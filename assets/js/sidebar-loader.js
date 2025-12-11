@@ -1,7 +1,3 @@
-// sidebar-loader.js
-// Carga dinámica del fragmento HTML del sidebar y luego importa el módulo que lo controla.
-// Usa import.meta.url para construir rutas   relativas robustas.
-
 const SIDEBAR_URL = new URL('../components/sidebar.html', import.meta.url).href;
 const SIDEBAR_MODULE = new URL('./sidebar-user.js', import.meta.url).href;
 const SIDEBAR_CONTAINER_ID = 'app-sidebar';
@@ -28,5 +24,5 @@ async function loadSidebar() {
     }
 }
 
-// Ejecutar inmediatamente (es módulo, por lo que import.meta.url funciona)
+
 loadSidebar();
