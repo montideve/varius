@@ -5,14 +5,14 @@ import { getFirestore, doc as fsDoc, getDoc } from "https://www.gstatic.com/fire
 import { logout } from './auth.js';
 import { applyUiRestrictions } from './rbac.js';
 
-// Asegura que el módulo de presence se cargue (start presence listeners)
+// Asegura que el módulo de presence se  cargue (start presence listeners)
 import './presence.js';
 
-// init firebase app (re-use if already initialized)
+// init firebase app (re-use if already  initialized)
 const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-
+ 
 // Helpers para esperar al sidebar inyectado
 function whenReady(selector, timeout = 3000) {
     return new Promise((resolve) => {
@@ -32,7 +32,7 @@ function whenReady(selector, timeout = 3000) {
             resolve(document.querySelector(selector));
         }, timeout);
     });
-}
+} 
 
 function getInitials(name) {
     if (!name) return '';
